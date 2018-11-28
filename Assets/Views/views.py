@@ -130,7 +130,6 @@ def in2out(request):
         obj = models.Company_info.objects.all()
         tmp = {'info':obj}
         tmp.update(models.menu_info)
-
         return  render(request, 'stock_inquiry.html',tmp)
 
 
