@@ -9,7 +9,7 @@
 						<ul class="breadcrumb">
 							<li>
 								<i class="icon-home home-icon"></i>
-								<a href="/web/index.html">主页</a>
+								<a href="/index.html">主页</a>
 							</li>
 
 							<li>
@@ -102,7 +102,7 @@
 						{name:'company',index:'company', width:150, editable: true,edittype:"select",editoptions:{value:"FE:FedEx;IN:InTime;TN:TNT;AR:ARAMEX"}},
 						{name:'contacts',index:'contacts', width:80, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
 						{name:'manger_user',index:'manger_user', width:150, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
-                        {name: 'host_id', index: 'host_id', width: 50, align: 'center', formatter: function(cellvalue, options, rowObject) {var detail = "<a href='http://127.0.0.1:8000/asserts_manager/info_list.html/"  + rowObject.id+" ' target='_blank'>查看 </ a>";return detail;},},
+                        {name: 'host_id', index: 'host_id', width: 50, align: 'center', formatter: function(cellvalue, options, rowObject) {var detail = "<a href='http://192.168.96.61 :8000/asserts_manager/info_list.html/"  + rowObject.id+" ' target='_blank'>查看 </ a>";return detail;},},
 						{name:'create_at',index:'create_at', width:120, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
 						{name:'update_at',index:'update_at', width:120, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
 					],

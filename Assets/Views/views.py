@@ -1,127 +1,90 @@
-from django.shortcuts import render ,HttpResponse
+from django.shortcuts import render ,HttpResponse,redirect
 from db_server import models
 import xlrd,datetime ,json
 from DDIT import Paging
+from DDIT.ddit_plugins import auth,menu_list,search_rules,Fliter_1,Fliter_2
 
 
-search_rules = {'rules1':['eq','ne','in','ni'],'rules2':['lt','le','gt','ge'],'rules3':['bw','bn','ew','en','cn','nc']}
 
-
-def Fliter_1(request,Mod):
-     #等于 不等于 或者 属于 不属于 匹配查询
-        if request.POST.get('searchOper') == 'eq':
-            obj = Mod.filter(
-                **{request.POST.get('searchField'): request.POST.get('searchString')}).all()
-
-        elif request.POST.get('searchOper') == 'ne':
-            obj = Mod.filter(
-                ~models.Q(**{request.POST.get('searchField'): request.POST.get('searchString')})).all()
-        elif request.POST.get('searchOper') == 'in':
-            q1 = models.Q()
-            q1.connector = 'OR'
-            tmp_list = request.POST.get('searchString').split(' ')
-            for i in tmp_list:
-                q1.children.append((request.POST.get('searchField'), i))
-            obj = models.Company_info.objects.filter(q1).all()
-        elif request.POST.get('searchOper') == 'ni':
-            q1 = models.Q()
-            q1.connector = 'OR'
-            tmp_list = request.POST.get('searchString').split(' ')
-            for i in tmp_list:
-                q1.children.append(
-                    (request.POST.get('searchField'), i))
-            obj = models.Company_info.objects.filter(~q1).all()
-        return obj
-
-def Fliter_2(request,Mod):
-    # ID 相关的小于，大于 ，小于等于，大于等于###
-    if request.POST.get('searchOper') == 'lt':
-        obj = Mod.filter(id__lt=request.POST.get('searchString')).all()
-    elif request.POST.get('searchOper') == 'le':
-        obj = Mod.filter(id__lte=request.POST.get('searchString')).all()
-    elif request.POST.get('searchOper') == 'gt':
-        obj = Mod.filter(
-            id__gt=request.POST.get('searchString')).all()
-
-    elif request.POST.get('searchOper') == 'ge':
-        obj = Mod.filter(
-            id__gte=request.POST.get('searchString')).all()
-
+@auth
 def supplier(request):
+   
      #供应商视图
-    if request.method == 'POST':
-        #增加数据
-        if request.POST.get('oper',None) == 'add':
-                   models.Company_info.objects.create(name=request.POST.get('name'),contacts=request.POST.get('contacts'),Address=request.POST.get('Address'),phone=request.POST.get('phone'),bill=request.POST.get('bill'),type=request.POST.get('type'))
-                   return HttpResponse(json.dumps({'Status': 'success','message':'ok' }))
+     
+        if request.method == 'POST':
+            #增加数据
+            if request.POST.get('oper',None) == 'add':
+                       models.Company_info.objects.create(name=request.POST.get('name'),contacts=request.POST.get('contacts'),Address=request.POST.get('Address'),phone=request.POST.get('phone'),bill=request.POST.get('bill'),type=request.POST.get('type'))
+                       return HttpResponse(json.dumps({'Status': 'success','message':'ok' }))
 
 
-        #修改数据
-        elif request.POST.get('oper',None) == 'edit':
-              obj = models.Company_info.objects.filter(id=request.POST.get('id')).update( name=request.POST.get('name'),contacts=request.POST.get('contacts'),Address=request.POST.get('Address'),phone=request.POST.get('phone'),bill=request.POST.get('bill'),type=request.POST.get('type'))
-              return HttpResponse(json.dumps({'Status':'success',}))
+            #修改数据
+            elif request.POST.get('oper',None) == 'edit':
+                  obj = models.Company_info.objects.filter(id=request.POST.get('id')).update( name=request.POST.get('name'),contacts=request.POST.get('contacts'),Address=request.POST.get('Address'),phone=request.POST.get('phone'),bill=request.POST.get('bill'),type=request.POST.get('type'))
+                  return HttpResponse(json.dumps({'Status':'success',}))
 
 
-        #删除数据
-        elif request.POST.get('oper', None) == 'del':
-            models.Company_info.objects.filter(id=request.POST.get('id')).delete()
-            return HttpResponse(json.dumps({'Status': 'success','message':'ok'  }))
-
-
-
-        #正常查询数据
-        elif request.POST.get('_search',None) == 'false':
-            obj = models.Company_info.objects.all()
-            res = Paging.page_list(request, obj)
-            rows = []
-            for i in res.get('data'):
-                tmp = {}
-                tmp.update({'id':i.id,'name':i.name,'contacts':i.contacts,'phone':i.phone,'type':i.type,'Address':i.Address,'bill':i.bill,'buyer':i.buyer,'create_at':(i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),'update_at':(i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
-                rows.append(tmp)
-            data = {'page': res.get('page'),
-                        'total': res.get('last'),
-                        'records': res.get('records'), 'rows': rows}
-            return HttpResponse(json.dumps(data),content_type="application/json")
-
-        ##匹配搜索
-        elif  request.POST.get('_search',None) == 'true':
-
-
-                      ####等于、不等于 属于 不属于类的 模糊查询  ####
-                      if   request.POST.get('searchOper') in search_rules.get('rules1'):
-                          obj = Paging.page_list(request, Fliter_1(request, models.Company_info.objects))
-
-
-                      ###### id字段下的 大于、小于 不小于、不大于的模糊查询#####
-                      elif request.POST.get('searchField') == 'id' and request.POST.get('searchOper') in search_rules.get('rules2') :
-                          obj = Paging.page_list(request, Fliter_2(request,models.Company_info.objects))
+            #删除数据
+            elif request.POST.get('oper', None) == 'del':
+                models.Company_info.objects.filter(id=request.POST.get('id')).delete()
+                return HttpResponse(json.dumps({'Status': 'success','message':'ok'  }))
 
 
 
-                      elif request.POST.get('searchOper') in search_rules.get('rules3'):
-                          ####后续调整
-                                     pass
+            #正常查询数据
+            elif request.POST.get('_search',None) == 'false':
+                obj = models.Company_info.objects.all()
+                res = Paging.page_list(request, obj)
+                rows = []
+                for i in res.get('data'):
+                    tmp = {}
+                    tmp.update({'id':i.id,'name':i.name,'contacts':i.contacts,'phone':i.phone,'type':i.type,'Address':i.Address,'bill':i.bill,'buyer':i.buyer,'create_at':(i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),'update_at':(i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
+                    rows.append(tmp)
+                data = {'page': res.get('page'),
+                            'total': res.get('last'),
+                            'records': res.get('records'), 'rows': rows}
+                return HttpResponse(json.dumps(data),content_type="application/json")
 
-                      res = obj
-                      rows = []
-                      for i in res.get('data'):
-                          tmp = {}
-                          tmp.update({'id': i.id, 'name': i.name, 'contacts': i.contacts, 'phone': i.phone,
-                                      'type': i.type, 'Address': i.Address, 'bill': i.bill, 'buyer': i.buyer,
-                                      'create_at': (i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),
-                                      'update_at': (i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
-                          rows.append(tmp)
-                      data = {'page': res.get('page'),
-                              'total': res.get('last'),
-                              'records': res.get('records'), 'rows': rows}
-                      return HttpResponse(json.dumps(data), content_type="application/json")
-    return  render(request, 'supplier.html',models.menu_info)
+            ##匹配搜索
+            elif  request.POST.get('_search',None) == 'true':
 
 
+                          ####等于、不等于 属于 不属于类的 模糊查询  ####
+                          if   request.POST.get('searchOper') in search_rules.get('rules1'):
+                              obj = Paging.page_list(request, Fliter_1(request, models.Company_info.objects))
+
+
+                          ###### id字段下的 大于、小于 不小于、不大于的模糊查询#####
+                          elif request.POST.get('searchField') == 'id' and request.POST.get('searchOper') in search_rules.get('rules2') :
+                              obj = Paging.page_list(request, Fliter_2(request,models.Company_info.objects))
+
+
+
+                          elif request.POST.get('searchOper') in search_rules.get('rules3'):
+                              ####后续调整
+                                         pass
+
+                          res = obj
+                          rows = []
+                          for i in res.get('data'):
+                              tmp = {}
+                              tmp.update({'id': i.id, 'name': i.name, 'contacts': i.contacts, 'phone': i.phone,
+                                          'type': i.type, 'Address': i.Address, 'bill': i.bill, 'buyer': i.buyer,
+                                          'create_at': (i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),
+                                          'update_at': (i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
+                              rows.append(tmp)
+                          data = {'page': res.get('page'),
+                                  'total': res.get('last'),
+                                  'records': res.get('records'), 'rows': rows}
+                          return HttpResponse(json.dumps(data), content_type="application/json")
+        return  render(request, 'supplier.html',menu_list(request))
 
 
 
 
+
+
+@auth
 def in2out(request):
     if request.method == 'POST':
         print(request.POST.get('name'))
@@ -129,13 +92,13 @@ def in2out(request):
     elif request.method == 'GET':
         obj = models.Company_info.objects.all()
         tmp = {'info':obj}
-        tmp.update(models.menu_info)
+        tmp.update(menu_list(request))
         return  render(request, 'stock_inquiry.html',tmp)
 
 
 
 
-
+@auth
 def assets(request):
     #固定资产视图
     if request.method == 'POST':
@@ -216,11 +179,11 @@ def assets(request):
                     'total': res.get('last'),
                     'records': res.get('records'), 'rows': rows}
             return HttpResponse(json.dumps(data), content_type="application/json")
-    return  render(request, 'storage.html',models.menu_info)
+    return  render(request, 'storage.html',menu_list(request))
 
 
 
-
+@auth
 def consumable(request):
     if request.method == 'POST':
         if request.POST.get('oper', None) == 'edit':
@@ -300,17 +263,19 @@ def consumable(request):
                     'total': res.get('last'),
                     'records': res.get('records'), 'rows': rows}
             return HttpResponse(json.dumps(data), content_type="application/json")
-    return render(request, 'consumable.html', models.menu_info)
+    return render(request, 'consumable.html',menu_list(request))
 
 
 
 
-
+@auth
 def select(request):
-    return  render(request, 'stock_inquiry.html',models.menu_info)
+    return  render(request, 'stock_inquiry.html',menu_list(request))
 
 
 
+
+@auth
 def info_list(request,page):
     
     try:
@@ -323,10 +288,10 @@ def info_list(request,page):
     except Exception as e:
         data = {'status': 'error',  'data': e}
     tmp = {'info':data}
-    tmp.update(models.menu_info)
+    tmp.update(menu_list(request))
     return render(request,'info_list.html',tmp)
 
-
+@auth
 def stock_inquiry(request):
     pass
 

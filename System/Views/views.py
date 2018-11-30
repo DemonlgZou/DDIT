@@ -1,6 +1,7 @@
 from django.shortcuts import render ,HttpResponse
 from db_server import models
 from DDIT import Paging
+from DDIT.ddit_plugins import auth,menu_list
 import json,datetime
 
 class CJsonEncoder(json.JSONEncoder):
@@ -15,27 +16,25 @@ class CJsonEncoder(json.JSONEncoder):
 
 
 
-
+@auth
 def firewall(request):
 
-    return render(request,'port.html',models.menu_info)
+    return render(request,'port.html',menu_list(request))
 
-
+@auth
 def firewall_list(request):
 
-    return render(request,'port_list.html',models.menu_info)
+    return render(request,'port_list.html',menu_list(request))
 
+
+@auth
 def vm(request):
 
+    return render(request, 'create_host.html',menu_list(request))
 
 
 
-
-    return render(request, 'create_host.html',models.menu_info)
-
-
-
-
+@auth
 def host_list(request):
     if request.method =='POST':
         obj = models.Server_info.objects.all()
@@ -51,4 +50,4 @@ def host_list(request):
                 'records':res.get('records'),'rows':rows}
         print(data)
         return HttpResponse(json.dumps(data),content_type="application/json")
-    return render(request,'host_list.html',models.menu_info)
+    return render(request,'host_list.html',menu_list(request))

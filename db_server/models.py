@@ -117,15 +117,70 @@ class Server_info(models.Model):
     true_server = models.CharField(max_length=128,verbose_name='宿主机',null=True)
     create_at = models.DateTimeField(verbose_name='创建时间',auto_created=True,auto_now_add=True)
     update_at = models.DateTimeField(verbose_name='更新时间',auto_created=True,auto_now=True)
-    
-
     class Meta:
         db_table = 'ddit_server_info'
 
-child = Menu.objects.filter(child=1).all()
-#print(child)
-top = Menu.objects.filter(top=0).all()
 
-menu_info = {'child':child,'top':top}
+class PM_list(models.Model):
+      #项目明细
+    contract_id =  models.CharField(max_length=128,verbose_name='合同编号',unique=True)
+    contract_start = models.DateField(verbose_name='合同开始日期',null=True)
+    contract_end = models.DateField(verbose_name='合同结束日期',null=True)
+    contract_price = models.IntegerField(verbose_name='合同金额',null=True)
+    contract_work = models.FloatField(verbose_name='预期工作量',null=True)
+    pid = models.CharField(max_length=128,verbose_name='项目编号',unique=True)
+    father_name = models.CharField(max_length=128,verbose_name='项目名称')
+    child_name = models.CharField(max_length=128,verbose_name='项目二级分类')
+    service2in = models.CharField (max_length=128,verbose_name='业务线标识in')
+    service2out = models.CharField (max_length=128,verbose_name='业务线标识out')
+    operator  = models.CharField (max_length=128,verbose_name='执行方')
+    manager  = models.CharField (max_length=128,verbose_name='管理方')
+    date_time = models.DateField(verbose_name='上线时间')
+    Manage = models.CharField(max_length=128, verbose_name='PM',null=True)
+    step = models.CharField(max_length=10, verbose_name='当前阶段')
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
+    update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
+
+    class Meta:
+             db_table ='ddit_PM_list'
+
+class Work_hours(models.Model):
+    ###工作量统计表####
+    arr1 = models.FloatField(verbose_name='1月数据',null=True)
+    arr2 = models.FloatField(verbose_name='2月数据',null=True)
+    arr3 = models.FloatField(verbose_name='3月数据',null=True)
+    arr4 = models.FloatField(verbose_name='4月数据',null=True)
+    arr5 = models.FloatField(verbose_name='5月数据',null=True)
+    arr6 = models.FloatField(verbose_name='6月数据',null=True)
+    arr7 = models.FloatField(verbose_name='7月数据',null=True)
+    arr8 = models.FloatField(verbose_name='8月数据',null=True)
+    arr9 = models.FloatField(verbose_name='9月数据',null=True)
+    arr10 = models.FloatField(verbose_name='10月数据',null=True)
+    arr11 = models.FloatField(verbose_name='11月数据',null=True)
+    arr12 = models.FloatField(verbose_name='12月数据',null=True)
+    date = models.CharField(max_length=32,verbose_name='年份')
+    item = models.ForeignKey('PM_list',related_name='pm_id',on_delete=None,null=True)
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
+    update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
+    class Meta:
+             db_table ='ddit_Work_hours'
+
+
+
+class period(models.Model):
+    #####里程碑数据库
+    tast_name = models.CharField(max_length=128,verbose_name='任务名称')
+    start_at  = models.DateField(verbose_name='开始时间')
+    end_at =   models.DateField(verbose_name='结束时间')
+    delay =  models.SmallIntegerField(verbose_name='延期时间')
+    plan_no = models.FloatField(verbose_name='预期工作量')
+    Evaluation = models.CharField(max_length=256,verbose_name='考评内容')
+    no = models.ForeignKey('PM_list',to_field='pid',verbose_name='项目编号',on_delete=None)
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
+    update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
+    class Meta:
+          db_table = 'ddit_period'
+
+
 
 

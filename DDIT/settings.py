@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
-
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -40,6 +39,8 @@ INSTALLED_APPS = [
     'System',
     'Assets',
     'db_server',
+    'Pmanager',
+
 ]
 
 MIDDLEWARE = [
@@ -123,6 +124,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 #print(BASE_DIR)
-STATICFILES_DIRS = [os.path.join(BASE_DIR,r'static',),os.path.join(BASE_DIR,r'Assets',r'static'),os.path.join(BASE_DIR,r'System',r'static'),]
+STATICFILES_DIRS = [os.path.join(BASE_DIR,r'static',),os.path.join(BASE_DIR,r'Assets',r'static'),os.path.join(BASE_DIR,r'System',r'static'),os.path.join(BASE_DIR,r'Pmanager',r'static'),]
 #print(STATICFLES_DIRS)
 
