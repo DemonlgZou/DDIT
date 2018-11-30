@@ -24,13 +24,13 @@ def menu_list(request):
         menu = Role2Menu.objects.filter(rid=user_id).all()
 
         list1 = Menu.objects.filter(menu__in=menu).all()
-        print(list1)
+        #print(list1)
         for i in menu:
             i.menu.id
-            print(i.menu.id)
+            #print(i.menu.id)
             tmp.append(i.menu.id)
         list2 = Menu.objects.filter(top_no__in=tmp).all()
-        print(list2)
+        #print(list2)
         return {'top':list1,'child':list2}
     else:
         return render(request,'login.html')

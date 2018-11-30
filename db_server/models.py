@@ -123,7 +123,7 @@ class Server_info(models.Model):
 
 class PM_list(models.Model):
       #项目明细
-    contract_id =  models.CharField(max_length=128,verbose_name='合同编号',unique=True)
+    contract_id =  models.CharField(max_length=128,verbose_name='合同编号',null=True)
     contract_start = models.DateField(verbose_name='合同开始日期',null=True)
     contract_end = models.DateField(verbose_name='合同结束日期',null=True)
     contract_price = models.IntegerField(verbose_name='合同金额',null=True)
@@ -134,8 +134,8 @@ class PM_list(models.Model):
     service2in = models.CharField (max_length=128,verbose_name='业务线标识in')
     service2out = models.CharField (max_length=128,verbose_name='业务线标识out')
     operator  = models.CharField (max_length=128,verbose_name='执行方')
-    manager  = models.CharField (max_length=128,verbose_name='管理方')
-    date_time = models.DateField(verbose_name='上线时间')
+    manager  = models.CharField (max_length=128,verbose_name='责任方')
+    date_time = models.DateField(verbose_name='上线时间',null=True)
     Manage = models.CharField(max_length=128, verbose_name='PM',null=True)
     step = models.CharField(max_length=10, verbose_name='当前阶段')
     create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
@@ -158,7 +158,7 @@ class Work_hours(models.Model):
     arr10 = models.FloatField(verbose_name='10月数据',null=True)
     arr11 = models.FloatField(verbose_name='11月数据',null=True)
     arr12 = models.FloatField(verbose_name='12月数据',null=True)
-    date = models.CharField(max_length=32,verbose_name='年份')
+    date = models.CharField(max_length=32,verbose_name='年份',null=True)
     item = models.ForeignKey('PM_list',related_name='pm_id',on_delete=None,null=True)
     create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
     update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
