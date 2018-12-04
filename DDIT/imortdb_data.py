@@ -218,3 +218,25 @@ def write_data():
                 #models.host_info.objects.create(name=info[4],type='显示器',Display=info[9])
         t += 1
 #write_data()
+
+def add_port():
+    with open(r'C:\Users\demonlg\Desktop\session.log', 'r', encoding='utf-8')as f:
+        t = 0
+        for line in f:
+            # print(line)
+            if t > 0:
+                a = line.split(' ')
+                if 'protocol' in a and 'global' in a and 'interface' in a:
+                    rule_name = a[3]
+                    rule_type = a[5]
+                    interface = a[8]
+                    rule_out = a[9]
+                    rule_in = a[12]
+                    rule_ip = a[11]
+                    print(rule_name, rule_in, rule_out, rule_type, rule_ip)
+                    models.open_port.objects.create(proposer='管理员',dept='管理员',rule_name=rule_name,
+                                                    type=rule_type,host_ip=rule_ip,inside_port=rule_in,
+                                                    outside_port=rule_out,on_line=True,interface=interface)
+                    
+            t += 1
+            

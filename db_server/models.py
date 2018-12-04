@@ -89,7 +89,7 @@ class host_info(models.Model):
 
 
 class Assets_log(models.Model):
-    # 资产管理操作记录
+    '''资产管理操作记录'''
     pass
     
     class Meta:
@@ -97,7 +97,7 @@ class Assets_log(models.Model):
 
 
 class Company_info(models.Model):
-    # 供货商公司名称
+    '''供货商公司名称'''
     name = models.CharField(max_length=128, verbose_name='供货商公司名', default='无')
     contacts = models.CharField(max_length=128, verbose_name='联系人', default='无')
     phone = models.CharField(verbose_name='电话号码', max_length=32)
@@ -113,7 +113,7 @@ class Company_info(models.Model):
 
 
 class Server_info(models.Model):
-    # 服务器信息
+    '''服务器信息'''
     
     name = models.CharField(verbose_name='服务器名称', max_length=32)
     IP = models.GenericIPAddressField(verbose_name='IP地址', unique=True)
@@ -130,7 +130,7 @@ class Server_info(models.Model):
 
 
 class PM_list(models.Model):
-    # 项目明细#
+    '''项目明细'''
     contract_id = models.CharField(max_length=128, verbose_name='合同编号', null=True)
     contract_start = models.CharField(verbose_name='合同开始日期', null=True,max_length=128)
     contract_end = models.CharField(verbose_name='合同结束日期', null=True,max_length=128)
@@ -139,13 +139,14 @@ class PM_list(models.Model):
     pid = models.CharField(max_length=128, verbose_name='项目编号', unique=True)
     father_name = models.CharField(max_length=128, verbose_name='项目名称')
     child_name = models.CharField(max_length=128, verbose_name='项目二级分类')
-    service2in = models.CharField(max_length=128, verbose_name='业务线标识in')
-    service2out = models.CharField(max_length=128, verbose_name='业务线标识out')
+    service2in = models.CharField(max_length=128, verbose_name='业务线标识in',null=True)
+    service2out = models.CharField(max_length=128, verbose_name='业务线标识out',null=True)
     operator = models.CharField(max_length=128, verbose_name='执行方')
     manager = models.CharField(max_length=128, verbose_name='责任方')
     date_time = models.CharField(verbose_name='上线时间', null=True,max_length=128)
     Manage = models.CharField(max_length=128, verbose_name='PM', null=True)
     step = models.CharField(max_length=10, verbose_name='当前阶段')
+    desc = models.CharField(max_length=128,verbose_name='备注说明',null=True)
     create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
     update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
     
@@ -154,7 +155,7 @@ class PM_list(models.Model):
 
 
 class Work_hours(models.Model):
-    ###工作量统计表####
+    '''工作量统计表'''
     arr1 = models.FloatField(verbose_name='1月数据', null=True)
     arr2 = models.FloatField(verbose_name='2月数据', null=True)
     arr3 = models.FloatField(verbose_name='3月数据', null=True)
@@ -177,13 +178,14 @@ class Work_hours(models.Model):
 
 
 class period(models.Model):
-    #####里程碑数据库
+    '''里程碑数据库'''
     name = models.CharField(max_length=128, verbose_name='任务名称',null=True)
-    start_at = models.CharField(verbose_name='开始时间',max_length=128)
-    end_at = models.CharField(verbose_name='结束时间',max_length=128)
-    delay = models.CharField(verbose_name='延期时间',max_length=128)
-    plan_no = models.CharField(verbose_name='预期工作量',max_length=128)
-    Evaluation = models.CharField(max_length=256, verbose_name='考评内容')
+    start_at = models.CharField(verbose_name='开始时间',max_length=128,null=True)
+    end_at = models.CharField(verbose_name='结束时间',max_length=128,null=True)
+    delay = models.CharField(verbose_name='延期时间',max_length=128,null=True)
+    plan_no = models.CharField(verbose_name='预期工作量',max_length=128,null=True)
+    fact_no = models.CharField(max_length=128, verbose_name='实际工作量',null=True)
+    Evaluation = models.CharField(max_length=128, verbose_name='考评内容',null=True)
     no = models.ForeignKey('PM_list',related_name='No', verbose_name='项目编号', on_delete=None)
     create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
     update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
@@ -196,15 +198,19 @@ class open_port(models.Model):
     proposer = models.CharField(max_length=128,verbose_name='申请人')
     dept = models.CharField(max_length=128,verbose_name='申请人部门')
     rule_name = models.CharField(max_length=128,verbose_name='策略名')
+    desc = models.CharField(max_length=128, verbose_name='策略用途')
     host_ip = models.GenericIPAddressField(verbose_name='ip地址')
     type = models.CharField(max_length=32,verbose_name='协议类型')
     inside_port = models.CharField(verbose_name='内网端口号',max_length=5)
     outside_port = models.CharField(verbose_name='外网端口号',max_length=5)
     start_time = models.DateField(verbose_name='开始日期',auto_created=True, auto_now_add=True)
     end_time = models.DateField(verbose_name='到期日期',null=True)
-    on_line = models.BooleanField(verbose_name='永久生效')
+    on_line = models.CharField(verbose_name='永久生效',null=True,max_length=32)
     create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
     update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
+    interface = models.CharField(max_length=128,verbose_name='接口名')
+
+
     class Meta:
         db_table = 'ddit_open_port'
         

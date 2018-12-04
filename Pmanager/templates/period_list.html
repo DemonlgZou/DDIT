@@ -9,13 +9,13 @@
 						<ul class="breadcrumb">
 							<li>
 								<i class="icon-home home-icon"></i>
-								<a href="/web/index.html">主页</a>
+								<a href="/index.html">主页</a>
 							</li>
 
 							<li>
-								<a href="#">服务器管理</a>
+								<a href="#">里程碑管理</a>
 							</li>
-							<li class="active">服务器信息</li>
+							<li class="active">里程碑信息</li>
 						</ul><!-- .breadcrumb -->
 
 						<div class="nav-search" id="nav-search">
@@ -29,30 +29,27 @@
 					</div>
 
 					<div class="page-content">
-						<div class="page-header">
-							
-						</div><!-- /.page-header -->
 
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
-
-{#								<div class="alert alert-info">#}
-{#									<i class="icon-hand-right"></i>#}
-{##}
-{#									#}
-{#									<button class="close" data-dismiss="alert">#}
-{#										<i class="icon-remove"></i>#}
-{#									</button>#}
-{#								</div>#}
 {% include 'templates.html' %}
 {% endblock %}
 {% block script_style %}
-
+    </div>
+    </div>
+    </div>
+    </div>
 
 		<script type="text/javascript">
 			window.jQuery || document.write("<script src='/static/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
 		</script>
+
+
+<script type="text/javascript">
+ window.jQuery || document.write("<script src='/static/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
 
 		<script type="text/javascript">
 			if("ontouchend" in document) document.write("<script src='/static/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
@@ -76,37 +73,30 @@
 		<script type="text/javascript">
 			var grid_data =
 			[
-
-			];	
-			
+			];
 			jQuery(function($) {
 				var grid_selector = "#grid-table";
 				var pager_selector = "#grid-pager";
-			
 				jQuery(grid_selector).jqGrid({
 					//direction: "rtl",
-					url: "system_manager/port_list.html/",
+					url: "Pmanager/period_list.html/",
                     mtype: "post",
 					{#data: grid_data,#}
 					datatype: "json",
-					height: 480,
-					colNames:['序号','策略名','内部IP地址', '协议类型', '内部端口号','外部端口号','启用接口','申请人','申请部门','生效日期','结束日期','永久','端口说明','创建时间','更新时间'],
+					height: 500,
+					colNames:[ '序号','项目编号','里程碑名','开始日期', '结束日期', '延迟天数','预期工作量','实际工作量','考评内容','创建时间','更新时间'],
 					colModel:[
-						{name:'id',index:'id', width:30, sorttype:"int", editable: true},
-						{name:'rule_name',index:'rule_name',width:90, editable:true, sorttype:"date",unformat: pickDate},
-						{name:'host_ip',index:'host_ip', width:60,editable: true,editoptions:{size:"20",maxlength:"30"}},
-						{name:'type',index:'type', width:30, editable: true,edittype:"checkbox",editoptions: {value:"Yes:No"},unformat: aceSwitch},
-						{name:'inside_port',index:'inside_port', width:40, editable: true,edittype:"select",editoptions:{value:"FE:FedEx;IN:InTime;TN:TNT;AR:ARAMEX"}},
-						{name:'outside_port',index:'outside_port', width:40, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
-						{name:'interface',index:'interface', width:50, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
-                      {name:'proposer',index:'proposer', width:40, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
-                      {name:'dept',index:'dept', width:120, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
-                      {name:'start_time',index:'start_time', width:50, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
-                      {name:'end_time',index:'end_time', width:50, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
-                      {name:'on_line',index:'on_line', width:50, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
-                      {name:'desc',index:'desc', width:50, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
-                      {name:'create_at',index:'create_at', width:150, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
-                      {name:'update_at',index:'update_at', width:150, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
+						{name:'id',index:'id', width:40, search:false,sorttype:"int", editable: false},
+						{name:'pid',index:'pid',width:80, editable:true, },
+						{name:'name',index:'name',search:false, width:80,editable: true,editoptions:{size:"20",maxlength:"30"}},
+						{name:'start_at',index:'start_time',search:false, width:80, editable: true},
+						{name:'end_at',index:'end_time',search:false, width:80, editable: true,edittype:"text" },
+                        {name:'delay',index:'delay', search:false,width:80, editable: true,edittype:"text" },
+                        {name:'plan_no',index:'plan_no', search:false,width:80, editable: true,edittype:"text" },
+                        {name:'cost2',index:'cost2', search:false,width:80, editable: false,edittype:"text" },
+                        {name:'Evaluation',index:'Evaluation',search:false, width:80, editable: true,edittype:"text" },
+                        {name:'create_at',index:'update_at',search:false, width:100, search:false,sorttype:"date",unformat: pickDate,editable: false,edittype:"datefmt", editoptions:{rows:"2",cols:"10"}} ,
+                         {name:'update_at',index:'update_at',search:false, width:100, search:false,sorttype:"date",unformat: pickDate,editable: false,edittype:"datefmt", editoptions:{rows:"2",cols:"10"}}
 					],
 			
 					viewrecords : true,
@@ -131,8 +121,8 @@
 						}, 0);
 					},
 			
-					editurl: $path_base+"system_manager/port_list.html/",//nothing is saved
-					caption: "服务器信息",
+					editurl: $path_base+"Pmanager/period_list.html/",//nothing is save
+					caption: "里程碑清单",
 			
 			
 					autowidth: true
@@ -178,13 +168,15 @@
 					},
 					{
 						//edit record form
-						//closeAfterEdit: true,
+						closeAfterEdit: false,
 						recreateForm: true,
+
 						beforeShowForm : function(e) {
 							var form = $(e[0]);
 							form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
 							style_edit_form(form);
-						}
+						},
+                        
 					},
 					{
 						//new record form
@@ -225,7 +217,7 @@
 							style_search_filters($(this));
 						}
 						,
-						multipleSearch: true,
+						multipleSearch: false,
 						/**
 						multipleGroup:true,
 						showQuery: true
@@ -245,7 +237,7 @@
 				
 				function style_edit_form(form) {
 					//enable datepicker on "sdate" field and switches for "stock" field
-					form.find('input[name=sdate]').datepicker({format:'yyyy-mm-dd' , autoclose:true})
+					form.find('input[name=update]').datepicker({format:'yyyy-mm-dd' , autoclose:true})
 						.end().find('input[name=stock]')
 							  .addClass('ace ace-switch ace-switch-5').wrap('<label class="inline" />').after('<span class="lbl"></span>');
 			
@@ -364,4 +356,3 @@
 			});
 		</script>
 {% endblock %}
-{#	<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div>#}

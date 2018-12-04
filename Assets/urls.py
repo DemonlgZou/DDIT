@@ -8,6 +8,6 @@ urlpatterns = [
     url('assets_list.html/', views.assets,name='assets'), #固定资产查询
     url('consumable.html/', views.consumable,name='consumable'),  #易耗品查询
     url('stock_inquiry.html/', views.select,name='select'), ####库存查询表
-    url('info_list.html/(?P<page>\d+)/$',views.info_list,name ='info_list')
+    url('info_list.html/(?P<page>\d+)$',views.info_list,name ='info_list')
     # url('supplier.html/', views.supplier,name='supplier'),
 ]

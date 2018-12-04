@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'Assets',
     'db_server',
     'Pmanager',
+    'django_crontab'
 
 ]
 
@@ -78,14 +79,23 @@ WSGI_APPLICATION = 'DDIT.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ddit_CMDB',
+        'USER':'root',
+        'PASSWORD':'root',
+        'HOST':'192.168.100.233',
+        'PORT':'3306',
     }
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -127,3 +137,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR,r'static',),os.path.join(BASE_DIR,r'Assets',r'static'),os.path.join(BASE_DIR,r'System',r'static'),os.path.join(BASE_DIR,r'Pmanager',r'static'),]
 #print(STATICFLES_DIRS)
 
+CRONJOBS = (
+('*/1 * * * *', 'DDIT.System.cron.check_port_excess' ,'> /home/logs'),
+
+
+
+
+)

@@ -34,6 +34,7 @@ def menu_list(request):
 def Fliter_1(request, Mod):
     # 等于 不等于 或者 属于 不属于 匹配查询
     if request.POST.get('searchOper') == 'eq':
+        print(request.POST.get('searchField'),request.POST.get('searchString'))
         obj = Mod.filter(
             **{request.POST.get('searchField'): request.POST.get('searchString')}).all().order_by('id')
 

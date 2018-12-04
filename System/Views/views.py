@@ -1,52 +1,94 @@
-from django.shortcuts import render ,HttpResponse
+from django.shortcuts import render, HttpResponse
 from db_server import models
-from DDIT import Paging
-from DDIT.ddit_plugins import auth,menu_list
-import json,datetime
+from DDIT import Paging,FROM
+from DDIT.ddit_plugins import auth, menu_list
+from System.Views.OS_manager.firewall_manager import open_port
+import json, datetime,uuid,threading
 
-class CJsonEncoder(json.JSONEncoder):
-	def default(self, obj):
-		if isinstance(obj, datetime.datetime):
-			return obj.strftime('%Y-%m-%d %H:%M:%S')
-		elif isinstance(obj, datetime):
-			return obj.strftime("%Y-%m-%d")
-		else:
-			return json.JSONEncoder.default(self, obj)
 
 
 
 
 @auth
 def firewall(request):
+	#远程开通外网访问权限的方法
+	if request.is_ajax():
+		print(request.POST.get('on_line'))
+		obj = FROM.firewall_port(request.POST)
+		if obj.is_valid():
+			print(obj.cleaned_data)
+			for i in ['Dialer0','Dialer1']:
+				rule_name = str(uuid.uuid1()).replace('-','')
+				res = open_port('192.168.254.248','admin','DDit#20020607!',rule_name,
+				                request.POST.get('type'),i,str(request.POST.get('outside_port')),
+				                request.POST.get('host_ip'),str(request.POST.get('inside_port')))
+				if res:
+					obj.cleaned_data.update({'rule_name':rule_name,'interface':i})
+					models.open_port.objects.create(**obj.cleaned_data)
+			return HttpResponse(json.dumps({'ok': '端口开通中'}), content_type="application/json")
+		else:
+			print(obj.errors)
+			return HttpResponse(json.dumps({'ok': 'pk'}), content_type="application/json")
+	return render(request, 'port.html', menu_list(request))
 
-    return render(request,'port.html',menu_list(request))
 
 @auth
 def firewall_list(request):
-
-    return render(request,'port_list.html',menu_list(request))
+	#展示已开通外网端口的方法
+	if request.method == 'POST':
+		if request.POST.get('_search', None) == 'false':
+			obj = models.open_port.objects.all().order_by('id')
+			res = Paging.page_list(request, obj)
+			rows = []
+			for i in res.get('data'):
+				tmp = {}
+				tmp.update({
+					'id': i.id,
+					'rule_name': i.rule_name,
+					'host_ip': i.host_ip,
+					'type': i.type,
+					'dept': i.dept,
+					'inside_port': i.inside_port,
+					'outside_port': i.outside_port,
+					'interface': i.interface,
+					'proposer': i.proposer,
+					'start_time': i.start_time.strftime('%Y-%m-%d'),
+					'end_time': i.end_time.strftime('%Y-%m-%d')if i.end_time else None,
+					'on_line': i.on_line,
+					'desc':i.desc,
+					'create_at': i.create_at.strftime('%Y-%m-%dT%H:%M:%S'),
+					'update_at': i.update_at.strftime('%Y-%m-%dT%H:%M:%S'),
+				})
+				rows.append(tmp)
+			data = {'page': res.get('page'),
+				        'total': res.get('last'),
+				        'records': res.get('records'), 'rows': rows}
+			return HttpResponse(json.dumps(data), content_type="application/json")
+	return render(request, 'port_list.html', menu_list(request))
 
 
 @auth
 def vm(request):
 	if request.method == "POST":
 		pass
-	return render(request, 'create_host.html',menu_list(request))
-
+	return render(request, 'create_host.html', menu_list(request))
 
 
 @auth
 def host_list(request):
-    if request.method =='POST':
-        obj = models.Server_info.objects.all()
-        res = Paging.page_list(request,obj)
-        rows = []
-        for i in res.get('data') :
-            tmp = {}
-            tmp.update({'id':i.id,'name':i.name,'IP':i.IP,'server':i.server,'OS':i.OS,'desric':i.desric,'status':i.status,'create_at':(i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),'update_at':(i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
-            rows.append(tmp)
-        data = {'page':res.get('page'),
-                'total':res.get('last'),
-                'records':res.get('records'),'rows':rows}
-        return HttpResponse(json.dumps(data),content_type="application/json")
-    return render(request,'host_list.html',menu_list(request))
+	if request.method == 'POST':
+		obj = models.Server_info.objects.all()
+		res = Paging.page_list(request, obj)
+		rows = []
+		for i in res.get('data'):
+			tmp = {}
+			tmp.update({'id': i.id, 'name': i.name, 'IP': i.IP, 'server': i.server, 'OS': i.OS, 'desric': i.desric,
+			            'status': i.status, 'create_at': (i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),
+			            'update_at': (i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
+			rows.append(tmp)
+		data = {'page': res.get('page'),
+		        'total': res.get('last'),
+		        'records': res.get('records'), 'rows': rows}
+		return HttpResponse(json.dumps(data), content_type="application/json")
+	return render(request, 'host_list.html', menu_list(request))
+

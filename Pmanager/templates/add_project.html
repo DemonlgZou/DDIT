@@ -1,5 +1,51 @@
 {% extends 'base.html' %}
-		 {% block body %}
+<!-- basic styles -->
+{% block head %}
+		<link href="/static/assets/css/bootstrap.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="/static/assets/css/font-awesome.min.css" />
+
+		<!--[if IE 7]>
+		  <link rel="stylesheet" href="/static/assets/css/font-awesome-ie7.min.css" />
+		<![endif]-->
+
+		<!-- page specific plugin styles -->
+
+		<link rel="stylesheet" href="/static/assets/css/jquery-ui-1.10.3.custom.min.css" />
+		<link rel="stylesheet" href="/static/assets/css/chosen.css" />
+		<link rel="stylesheet" href="/static/assets/css/datepicker.css" />
+		<link rel="stylesheet" href="/static/assets/css/bootstrap-timepicker.css" />
+		<link rel="stylesheet" href="/static/assets/css/daterangepicker.css" />
+		<link rel="stylesheet" href="/static/assets/css/colorpicker.css" />
+
+		<!-- fonts -->
+
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" />
+
+		<!-- ace styles -->
+
+		<link rel="stylesheet" href="/static/assets/css/ace.min.css" />
+		<link rel="stylesheet" href="/static/assets/css/ace-rtl.min.css" />
+		<link rel="stylesheet" href="/static/assets/css/ace-skins.min.css" />
+
+		<!--[if lte IE 8]>
+		  <link rel="stylesheet" href="/static/assets/css/ace-ie.min.css" />
+		<![endif]-->
+
+		<!-- inline styles related to this page -->
+
+		<!-- ace settings handler -->
+
+		<script src="/static/assets/js/ace-extra.min.js"></script>
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+		<!--[if lt IE 9]>
+		<script src="/static/assets/js/html5shiv.js"></script>
+		<script src="/static/assets/js/respond.min.js"></script>
+		<![endif]-->
+
+{% endblock %}
+{% block body %}
 				<div class="main-content">
 					<div class="breadcrumbs" id="breadcrumbs">
 						<script type="text/javascript">
@@ -9,13 +55,13 @@
 						<ul class="breadcrumb">
 							<li>
 								<i class="icon-home home-icon"></i>
-								<a href="/web/index.html">主页</a>
+								<a href="/index.html">主页</a>
 							</li>
 
 							<li>
-								<a href="#">防火墙端口管理</a>
+								<a href="#">项目管理</a>
 							</li>
-							<li class="active">开启端口</li>
+							<li class="active">新增项目</li>
 						</ul><!-- .breadcrumb -->
 
 						<div class="nav-search" id="nav-search">
@@ -28,129 +74,146 @@
 						</div><!-- #nav-search -->
 					</div>
 
-					<div class="page-content">
-						<div class="page-header">
-							<h1>
-								策略管理
-								<small>
-									<i class="icon-double-angle-right"></i>
-									创建策略
-								</small>
-							</h1>
-						</div><!-- /.page-header -->
+					
 
-						<div class="row">
-							<div class="col-xs-12">
+						<div style="margin-top: 30px">
+
+							<div class="col-xs-12" >
 								<!-- PAGE CONTENT BEGINS -->
 
-								<form class="form-horizontal" role="form">
+								<form class="form-horizontal"  >
+                                    
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 申请人 </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 项目名称  </label>
 
 										<div class="col-sm-9">
-											<input type="text" id="form-field-1" placeholder="申请人" class="col-xs-10 col-sm-5" name="proposer" />
+											<input type="text" name="father_name" id="form-field-1" placeholder="项目名称" class="col-xs-10 col-sm-5" required />
+										<span>{{ data.father_name.0 }}</span>
+                                        </div>
+
+									</div>
+									<div class="space-4"></div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 项目编号 </label>
+
+										<div class="col-sm-9">
+											<input type="text"  name='pid' id="form-field-2" placeholder="项目编号" class="col-xs-10 col-sm-5" />
+										<span>{{ data.pid.0 }}</span>
+                                        </div>
+									</div>
+									<div class="space-4"></div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-3"> 项目分类 </label>
+
+										<div class="col-sm-9">
+											<input type="text" name="child_name" id="form-field-3" placeholder="项目分类" class="col-xs-10 col-sm-5" />
+										</div>
+									</div>
+									<div class="space-4"></div>
+
+
+                                    	<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-4"> 业务标识（内） </label>
+
+										<div class="col-sm-9">
+											<input type="text" name="service2in" id="form-field-4" placeholder="业务标识（内）" class="col-xs-10 col-sm-5" />
 										</div>
 									</div>
 									<div class="space-4"></div>
 
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 策略用途 </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-5"> 业务标识（对外） </label>
 
 										<div class="col-sm-9">
-											<input type="text" id="form-field-2" placeholder="策略用途" class="col-xs-10 col-sm-5" name="desc" />
+											<input type="text" name="service2out" id="form-field-5" placeholder=" 业务标识（对外）" class="col-xs-10 col-sm-5" />
+										</div>
+									</div>
+                                    <div class="space-4"></div>
+                                                                    <div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-6"> 责任方 </label>
+
+											<div class="col-sm-9">
+											<input type="text" name="manager" id="form-field-6" placeholder=" 责任方" class="col-xs-10 col-sm-5" />
 										</div>
 									</div>
 									<div class="space-4"></div>
-
-<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-3"> 申请部门 </label>
-
-										<div class="col-sm-9">
-											<input type="text" id="form-field-3" placeholder="申请部门" class="col-xs-10 col-sm-5" name="dept"/>
-										</div>
-									</div>
-									<div class="space-4"></div>
-
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-4"> 主机地址 </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-7"> 执行方 </label>
 
 										<div class="col-sm-9">
-											<input type="text" id="form-field-4" placeholder="IP地址" class="col-xs-10 col-sm-5" name="host_ip" />
+											<input type="text" name="operator" id="form-field-7" placeholder="执行方" class="col-xs-10 col-sm-5" />
 										</div>
 									</div>
 									<div class="space-4"></div>
                                     <div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-5"> 协议类型 </label>
-
-
-										<div class="col-sm-9">
-											<input type="text" id="form-field-5" placeholder="TCP/UDP" class="col-xs-10 col-sm-5" name="type" />
-										</div>
-									</div>
-									<div class="space-4"></div>
-                                        <div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-6"> 内部访问端口 </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-8"> 上线时间 </label>
 
 										<div class="col-sm-9">
-											<input type="int" id="form-field-6" placeholder="内部访问的端口" class="col-xs-10 col-sm-5" name="inside_port"/>
-										</div>
-
-									</div>
-
-									<div class="space-4"></div>
-                                        <div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-7"> 外部访问端口 </label>
-
-										<div class="col-sm-9">
-											<input type="int" id="form-field-7" placeholder="外部访问的端口" class="col-xs-10 col-sm-5" name="outside_port" />
+											<input type="text" name="date_time" id="form-field-8" placeholder="上线时间" class="col-xs-10 col-sm-5" />
 										</div>
 									</div>
 									<div class="space-4"></div>
 
                                     <div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-8"> 端口类型 </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-9"> 项目阶段 </label>
 
 										<div class="col-sm-9">
-
-											<select id="form-field-8" name="online">
-                                                <option selected="selected"   value='否'>临时</option>
-                                                <option  value='是'>长期</option>
-
-                                            </select>
+											<input type="text" name="step" id="form-field-9" placeholder="项目阶段" class="col-xs-10 col-sm-5" />
 										</div>
 									</div>
-
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-9"> 开始时间 </label>
-
-										<div class="col-sm-9">
-											<input type="date" id="form-field-9" placeholder="开始时间" class="col-xs-10 col-sm-5" />
-										</div>
-									</div>
-
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-10"> 结束时间 </label>
+									<div class="space-4"></div>
+                                    <div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-10"> PM </label>
 
 										<div class="col-sm-9">
-											<input type="date" id="form-field-10" placeholder="结束时间" class="col-xs-10 col-sm-5" />
-                                            
+											<input type="text" name="Manage" id="form-field-10" placeholder="PM" class="col-xs-10 col-sm-5" />
 										</div>
 									</div>
 									<div class="space-4"></div>
 
+                                    <div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-11"> 备注说明 </label>
+
+										<div class="col-sm-9">
+                                            <textarea name="desc" id="form-field-11" placeholder="备注说明" class="col-xs-10 col-sm-5" rows="10" cols="30"></textarea>
+{#											<select>#}
+{#                                                <option selected="selected"  name='work_hours' value="是">是</option>#}
+{#                                                <option name='work_hours' value="否">否</option>#}
+{##}
+{#                                            </select>#}
+										</div>
+									</div>
 									<div class="space-4"></div>
+{#                                    <div class="form-group">#}
+{#										<label class="col-sm-3 control-label no-padding-right" for="form-field-12"> 创建里程碑 </label>#}
+{##}
+{#										<div class="col-sm-9">#}
+{#                                            <select>#}
+{##}
+{#                                            <option selected="selected" name='period' value="是">是</option>#}
+{##}
+{#                                            <option name='period' value="否">否</option>#}
+{##}
+{#                                            </select>#}
+{#									</div>#}
+									<div class="space-4"></div>
+
+                                    <div class="space-4"></div>
+                                    
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
-											<button class="btn btn-info" type="button" onclick="add_port()">
+											<button class="btn btn-info " type="button"  onclick="submit1()">
 												<i class="icon-ok bigger-110"></i>
-												创建
+												提交
 											</button>
 
 											&nbsp; &nbsp; &nbsp;
 											<button class="btn" type="reset">
 												<i class="icon-undo bigger-110"></i>
-												重置
+												取消
 											</button>
 										</div>
 									</div>
@@ -162,28 +225,23 @@
 
 
 
+
 			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 				<i class="icon-double-angle-up icon-only bigger-110"></i>
 			</a>
 	<!-- /.main-container -->
-
+{% endblock %}
 		<!-- basic scripts -->
 
 		<!--[if !IE]> -->
-         {% endblock %}
-		  {% block script_style %}
+{% block script_style %}
+
 
 		<script type="text/javascript">
 			window.jQuery || document.write("<script src='/static/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
 		</script>
 
-		<!-- <![endif]-->
 
-		<!--[if IE]>
-<script type="text/javascript">
- window.jQuery || document.write("<script src='/static/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
-</script>
-<![endif]-->
 
 		<script type="text/javascript">
 			if("ontouchend" in document) document.write("<script src='/static/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
@@ -234,34 +292,32 @@
 						inp.value="This text field is disabled!";
 					}
 				});
-			
-			
-				$(".chosen-select").chosen(); 
+
+
+				$(".chosen-select").chosen();
 				$('#chosen-multiple-style').on('click', function(e){
 					var target = $(e.target).find('input[type=radio]');
 					var which = parseInt(target.val());
 					if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
 					 else $('#form-field-select-4').removeClass('tag-input-style');
 				});
-			
-			
-				$('[data-rel=tooltip]').tooltip({container:'body'});
-				$('[data-rel=popover]').popover({container:'body'});
-				
+
+
+
 				$('textarea[class*=autosize]').autosize({append: "\n"});
 				$('textarea.limited').inputlimiter({
 					remText: '%n character%s remaining...',
 					limitText: 'max allowed : %n.'
 				});
-			
+
 				$.mask.definitions['~']='[+-]';
 				$('.input-mask-date').mask('99/99/9999');
 				$('.input-mask-phone').mask('(999) 999-9999');
 				$('.input-mask-eyescript').mask('~9.99 ~9.99 999');
 				$(".input-mask-product").mask("a*-999-a999",{placeholder:" ",completed:function(){alert("You typed the following: "+this.val());}});
-			
-			
-			
+
+
+
 				$( "#input-size-slider" ).css('width','200px').slider({
 					value:1,
 					range: "min",
@@ -274,7 +330,7 @@
 						$('#form-field-4').attr('class', sizing[val]).val('.'+sizing[val]);
 					}
 				});
-			
+
 				$( "#input-span-slider" ).slider({
 					value:1,
 					range: "min",
@@ -286,8 +342,8 @@
 						$('#form-field-5').attr('class', 'col-xs-'+val).val('.col-xs-'+val);
 					}
 				});
-				
-				
+
+
 				$( "#slider-range" ).css('height','200px').slider({
 					orientation: "vertical",
 					range: true,
@@ -296,7 +352,7 @@
 					values: [ 17, 67 ],
 					slide: function( event, ui ) {
 						var val = ui.values[$(ui.handle).index()-1]+"";
-			
+
 						if(! ui.handle.firstChild ) {
 							$(ui.handle).append("<div class='tooltip right in' style='display:none;left:16px;top:-6px;'><div class='tooltip-arrow'></div><div class='tooltip-inner'></div></div>");
 						}
@@ -305,14 +361,14 @@
 				}).find('a').on('blur', function(){
 					$(this.firstChild).hide();
 				});
-				
+
 				$( "#slider-range-max" ).slider({
 					range: "max",
 					min: 1,
 					max: 10,
 					value: 2
 				});
-				
+
 				$( "#eq > span" ).css({width:'90%', 'float':'left', margin:'15px'}).each(function() {
 					// read initial values from markup and remove that
 					var value = parseInt( $( this ).text(), 10 );
@@ -320,11 +376,11 @@
 						value: value,
 						range: "min",
 						animate: true
-						
+
 					});
 				});
-			
-				
+
+
 				$('#id-input-file-1 , #id-input-file-2').ace_file_input({
 					no_file:'No File ...',
 					btn_choose:'Choose',
@@ -337,7 +393,7 @@
 					//onchange:''
 					//
 				});
-				
+
 				$('#id-input-file-3').ace_file_input({
 					style:'well',
 					btn_choose:'Drop files here or click to choose',
@@ -363,13 +419,13 @@
 						//3 = 'THUMBNAIL_FAILED'
 						//alert(error_code);
 					}
-			
+
 				}).on('change', function(){
 					//console.log($(this).data('ace_input_files'));
 					//console.log($(this).data('ace_input_method'));
 				});
-				
-			
+
+
 				//dynamically change allowed formats by changing before_change callback function
 				$('#id-file-format').removeAttr('checked').on('change', function() {
 					var before_change
@@ -392,11 +448,11 @@
 											|| ( type.length == 0 && ! (/\.(jpe?g|png|gif|bmp)$/i).test(file.name) )//for android's default browser which gives an empty string for file.type
 										) continue;//not an image so don't keep this file
 								}
-								
+
 								allowed_files.push(file);
 							}
 							if(allowed_files.length == 0) return false;
-			
+
 							return allowed_files;
 						}
 					}
@@ -411,26 +467,26 @@
 					file_input.ace_file_input('update_settings', {'before_change':before_change, 'btn_choose': btn_choose, 'no_icon':no_icon})
 					file_input.ace_file_input('reset_input');
 				});
-			
-			
-			
-			
+
+
+
+
 				$('#spinner1').ace_spinner({value:0,min:0,max:200,step:10, btn_up_class:'btn-info' , btn_down_class:'btn-info'})
 				.on('change', function(){
 					//alert(this.value)
 				});
 				$('#spinner2').ace_spinner({value:0,min:0,max:10000,step:100, touch_spinner: true, icon_up:'icon-caret-up', icon_down:'icon-caret-down'});
 				$('#spinner3').ace_spinner({value:0,min:-100,max:100,step:10, on_sides: true, icon_up:'icon-plus smaller-75', icon_down:'icon-minus smaller-75', btn_up_class:'btn-success' , btn_down_class:'btn-danger'});
-			
-			
-				
+
+
+
 				$('.date-picker').datepicker({autoclose:true}).next().on(ace.click_event, function(){
 					$(this).prev().focus();
 				});
 				$('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function(){
 					$(this).next().focus();
 				});
-				
+
 				$('#timepicker1').timepicker({
 					minuteStep: 1,
 					showSeconds: true,
@@ -438,17 +494,17 @@
 				}).next().on(ace.click_event, function(){
 					$(this).prev().focus();
 				});
-				
+
 				$('#colorpicker1').colorpicker();
 				$('#simple-colorpicker-1').ace_colorpicker();
-			
-				
+
+
 				$(".knob").knob();
-				
-				
+
+
 				//we could just set the data-provide="tag" of the element inside HTML, but IE8 fails!
 				var tag_input = $('#form-field-tags');
-				if(! ( /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase())) ) 
+				if(! ( /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase())) )
 				{
 					tag_input.tag(
 					  {
@@ -463,10 +519,10 @@
 					tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
 					//$('#form-field-tags').autosize({append: "\n"});
 				}
-				
-				
-				
-			
+
+
+
+
 				/////////
 				$('#modal-form input[type=file]').ace_file_input({
 					style:'well',
@@ -476,7 +532,7 @@
 					droppable:true,
 					thumbnail:'large'
 				})
-				
+
 				//chosen plugin inside a modal will have a zero width because the select element is originally hidden
 				//and its width cannot be determined.
 				//so we set the width after modal is show
@@ -494,45 +550,44 @@
 					$(this).find('.modal-chosen').chosen();
 				})
 				*/
-			
+
 			});
-		function add_port() {
-            var user = $('#form-field-1').val();
-            var name = $('#form-field-2').val();
-            var dept = $('#form-field-3').val();
-            var ip = $('#form-field-4').val();
-            var type = $('#form-field-5').val();
-            var inside_port = $('#form-field-6').val();
-            var outside_port = $('#form-field-7').val();
-            var online = $('#form-field-8 option:selected').val()
-            var start_time = $('#form-field-9').val();
-            var end_time = $('#form-field-10').val();
-            var info = {
-                'proposer': user,
-                'desc': name,
-                'dept': dept,
-                'host_ip': ip,
-                'type': type,
-                'inside_port': inside_port,
-                'outside_port': outside_port,
-                'on_line': online,
-                'start_time': start_time,
-                'end_time': end_time
-            }
+        function submit1() {
+
+            var father_name = $('#form-field-1').val();
+            var pid = $('#form-field-2').val();
+            var child_name = $('#form-field-3').val();
+            var service2in = $('#form-field-4').val();
+            var service2out  = $('#form-field-5').val();
+            var manager = $('#form-field-6').val();
+            var operator = $('#form-field-7').val();
+            var date_time = $('#form-field-8').val();
+            var step = $('#form-field-9').val();
+            var Manage = $('#form-field-10').val();
+            var desc = $('#form-field-11').val();
+
+            var data_info = {'father_name':father_name,'child_name':child_name,'service2in':service2in,'pid':pid,'service2out':service2out,
+                'manager':manager, 'operator':operator,'date_time':date_time,'step':step,'Manage':Manage,'desc':desc} ;
             $.ajax(
                 {
-                    type: 'POST',
-                    url: 'system_manager/firewall.html/',
-                    datatype: 'json',
-                    data: info,
-                    success: function (data) {
-                        {
-                            alert(data.ok)
-                        }
-                    }
+                 type:'POST',
+                 url :'asserts_manager/add.html/',
+                 datatype: 'json',
+                 data: data_info,
+                 success: function (data) {
+                     {alert(data.data)}
+
+
+
+
+                 }
+
                 }
-            )
+
+            ) ;
+
         }
 		</script>
+{#	<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div>#}
 
 {% endblock %}

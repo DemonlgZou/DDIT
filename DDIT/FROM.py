@@ -5,17 +5,19 @@ from db_server.models import *
 
 class firewall_port(forms.Form):
     # 验证前端传入的开放端口的表单数据类型
-   user = forms.CharField()  #申请人
-   name = forms.CharField()
+   proposer = forms.CharField()  #申请人
+   desc = forms.CharField()
    dept = forms.CharField()
-   ip = forms.GenericIPAddressField()
-   Type = forms.CharField()
-   port = forms.IntegerField()
-   create_at = forms.DateTimeField()
-   end_at = forms.DateTimeField()
+   host_ip = forms.GenericIPAddressField()
+   type = forms.CharField()
+   inside_port = forms.IntegerField()
+   outside_port = forms.IntegerField()
+   start_time = forms.DateField()
+   end_time = forms.DateField()
+   on_line = forms.CharField()
    
 
-class create_vm():
+class create_vm(forms.Form):
     #验证前端传入的创建新虚拟机的表单数据类型
     proposer = models.CharField(max_length=128, verbose_name='申请人')
     dept = models.CharField(max_length=128, verbose_name='申请人部门')
@@ -29,3 +31,17 @@ class create_vm():
     os_type = models.CharField(verbose_name='机器类型', max_length=128)
     end_time = models.DateField(verbose_name='到期日期', null=True)
     on_line = models.BooleanField(verbose_name='永久生效')
+    
+    
+class add_project(forms.Form):
+        father_name = forms.CharField()
+        pid = forms.CharField()
+        child_name = forms.CharField()
+        step = forms.CharField()
+        desc = forms.CharField()
+        Manage = forms.CharField()
+        manager = forms.CharField()
+        operator = forms.CharField()
+        date_time = forms.CharField()
+        service2in = forms.CharField()
+        service2out = forms.CharField()
