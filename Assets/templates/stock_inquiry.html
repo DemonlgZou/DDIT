@@ -220,7 +220,7 @@
                                     
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
-											<button class="btn btn-info " type="button"  onclick="submit1();return false;">
+											<button class="btn btn-info " type="button"  onclick="submit1()">
 												<i class="icon-ok bigger-110"></i>
 												入库
 											</button>
@@ -606,7 +606,11 @@
                  datatype: 'json',
                  data: data_info,
                  success: function (data) {
-                     alert(data);
+
+                     if (data.status){
+                         alert('入库成功！')
+                     }
+                     else{alert('参数错误！')}
 
 
                  }

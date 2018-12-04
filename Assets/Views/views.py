@@ -33,7 +33,7 @@ def supplier(request):
 
             #正常查询数据
             elif request.POST.get('_search',None) == 'false':
-                obj = models.Company_info.objects.all()
+                obj = models.Company_info.objects.all().order_by('id')
                 res = Paging.page_list(request, obj)
                 rows = []
                 for i in res.get('data'):
@@ -87,10 +87,10 @@ def supplier(request):
 @auth
 def in2out(request):
     if request.method == 'POST':
-        print(request.POST.get('name'))
+        #print(request.POST.get('name'))
         return HttpResponse(json.dumps({'status':'success'}), content_type="application/json")
     elif request.method == 'GET':
-        obj = models.Company_info.objects.all()
+        obj = models.Company_info.objects.all().order_by('id')
         tmp = {'info':obj}
         tmp.update(menu_list(request))
         return  render(request, 'stock_inquiry.html',tmp)
@@ -103,14 +103,8 @@ def assets(request):
     #固定资产视图
     if request.method == 'POST':
         if request.POST.get('oper', None) == 'edit':
-            obj = models.Reserves.objects.filter(id=request.POST.get('id')).update(name=request.POST.get('name'),
-                                                                                       contacts=request.POST.get(
-                                                                                           'contacts'),
-                                                                                       Address=request.POST.get('Address'),
-                                                                                       phone=request.POST.get('phone'),
-                                                                                       bill=request.POST.get('bill'),
-                                                                                       type=request.POST.get('type'))
-            obj.save()
+            obj = models.Reserves.objects.filter(id=request.POST.get('id')).update()
+
             return HttpResponse(json.dumps({'Status': 'success', }))
 
 
@@ -228,7 +222,7 @@ def consumable(request):
 
             if request.POST.get('searchOper') in search_rules.get('rules1'):
                 obj = Paging.page_list(request, Fliter_1(request, models.Reserves.objects))
-                # print(obj)
+                
 
             ###### id字段下的 大于、小于 不小于、不大于的模糊查询#####
             elif request.POST.get('searchField') == 'id' and request.POST.get('searchOper') in search_rules.get(
@@ -279,9 +273,7 @@ def select(request):
 def info_list(request,page):
     
     try:
-         print(page)
          obj = models.Reserves.objects.get(id=int(page))
-         print(obj)
          data = {'status': 'success', 'code': 200, 'data': obj}
     except ValueError :
        data= {'status': 'success','code':404, 'data':'没有数据'}
@@ -298,45 +290,3 @@ def stock_inquiry(request):
 
 
 
-def write_data():
-    data = xlrd.open_workbook(r'D:\DDIT\db_server\1111111.xlsx')
-    table = data.sheet_by_index(0)
-    nrows = table.nrows
-    cols = table.ncols
-    t = 0
-
-    for i in range(0, int(nrows)):
-        if t > 1:
-
-                info = (table.row_values(i))
-                name = info[4]
-                Type = '台式机'
-                CPU = info[5]
-                memory = info[7]
-                Bios = info[6]
-                MAC = info[2]
-                SN =info[-1]
-                NET =info[13]
-                cd =info[12]
-                Video =info[10]
-                Sound =info[11]
-                Disk =info[8]
-                user = info[0]
-                obj = models.Dictionary.objects.get(id=3)
-                arr1 = obj.arr1
-                arr2 = obj.arr2
-                arr3 = int(obj.arr3)
-                new_arr3 = arr3 +1
-                models.Dictionary.objects.update(arr3=str(new_arr3).zfill(6))
-                No = '%s-%s-%s%s'%(arr1,arr2,str((datetime.datetime.now().year)),str(new_arr3).zfill(6))
-               # print(No)
-              #  No =    arr3.zfill(6)
-              #  print(No)
-               # print(info[9])
-                #print(name,Type,CPU,memory,Bios,MAC,SN,NET,cd,Video,Sound,Disk)
-
-                obj = models.host_info.objects.create(name=name,type=Type,CPU=CPU,Memory=memory,Bios=Bios,MAC=MAC,SN=SN,Sound=Sound,Disk=Disk,CDrom=cd,NETWORK=NET,Video=Video)
-                models.Reserves.objects.create(name='办公电脑',Type=1,asset_No=No,price=0,company=0,contacts='无',manger_user=info[0],status=1,info_id=obj.id)
-                #models.host_info.objects.create(name=info[4],type='显示器',Display=info[9])
-        t += 1
-#write_data()

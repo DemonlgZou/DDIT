@@ -29,8 +29,9 @@ def firewall_list(request):
 
 @auth
 def vm(request):
-
-    return render(request, 'create_host.html',menu_list(request))
+	if request.method == "POST":
+		pass
+	return render(request, 'create_host.html',menu_list(request))
 
 
 
@@ -39,7 +40,6 @@ def host_list(request):
     if request.method =='POST':
         obj = models.Server_info.objects.all()
         res = Paging.page_list(request,obj)
-        print(res.get('data'))
         rows = []
         for i in res.get('data') :
             tmp = {}
@@ -48,6 +48,5 @@ def host_list(request):
         data = {'page':res.get('page'),
                 'total':res.get('last'),
                 'records':res.get('records'),'rows':rows}
-        print(data)
         return HttpResponse(json.dumps(data),content_type="application/json")
     return render(request,'host_list.html',menu_list(request))
