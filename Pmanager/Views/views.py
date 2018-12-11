@@ -428,3 +428,4 @@ def info_list(request,page):
 	tmp = {'info': data}
 	tmp.update(menu_list(request))
 	return render(request, 'project_info.html', tmp)
+#write_data()

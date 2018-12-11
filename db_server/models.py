@@ -62,6 +62,7 @@ class Reserves(models.Model):
     status = models.CharField(verbose_name='资产状态', max_length=32)
     # status = models.SmallIntegerField(choices=status_list,verbose_name='设备状态')
     info = models.ForeignKey('host_info', related_name='host', on_delete=None)
+    finance_id = models.CharField(max_length=128,verbose_name='财务对应资产编号',null=True)
     create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
     update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
     
@@ -83,7 +84,6 @@ class host_info(models.Model):
     Video = models.CharField(max_length=128, null=True, verbose_name='显卡型号')
     Sound = models.CharField(max_length=128, null=True, verbose_name='声卡型号')
     Disk = models.CharField(max_length=128, null=True, verbose_name='硬盘')
-    Display = models.CharField(max_length=128, null=True, verbose_name='显示器')
     create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
     update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
 
@@ -197,12 +197,12 @@ class open_port(models.Model):
     '''开通外网端口的'''
     proposer = models.CharField(max_length=128,verbose_name='申请人')
     dept = models.CharField(max_length=128,verbose_name='申请人部门')
-    rule_name = models.CharField(max_length=128,verbose_name='策略名')
+    rule_name = models.CharField(max_length=128,verbose_name='策略名',unique=True)
     desc = models.CharField(max_length=128, verbose_name='策略用途')
     host_ip = models.GenericIPAddressField(verbose_name='ip地址')
     type = models.CharField(max_length=32,verbose_name='协议类型')
-    inside_port = models.CharField(verbose_name='内网端口号',max_length=5)
-    outside_port = models.CharField(verbose_name='外网端口号',max_length=5)
+    inside_port = models.CharField(verbose_name='内网端口号',max_length=32)
+    outside_port = models.CharField(verbose_name='外网端口号',max_length=32)
     start_time = models.DateField(verbose_name='开始日期',auto_created=True, auto_now_add=True)
     end_time = models.DateField(verbose_name='到期日期',null=True)
     on_line = models.CharField(verbose_name='永久生效',null=True,max_length=32)
@@ -240,10 +240,26 @@ class log_system_info(models.Model):
     opeater = models.CharField(verbose_name='操作人员',max_length=128)
     type = models.CharField(verbose_name='操作类型',max_length=128)
     info = models.CharField(verbose_name='操作日志',max_length=128)
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
+   
     class Meta:
         db_table = 'ddit_system_info'
     
     
 
-
-    
+class monitor_host(models.Model):
+      name = models.CharField(max_length=128,verbose_name='机器名')
+      ip = models.GenericIPAddressField(unique=True,verbose_name='主机地址')
+      cpu = models.FloatField(verbose_name='CPU百分比',null=True)
+      meminfo = models.FloatField(verbose_name='内存百分比',null=True)
+      diskinfo = models.FloatField(verbose_name='磁盘百分比',null=True)
+      netinfo = models.FloatField(verbose_name='网络百分比',null=True)
+      create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
+      user = models.CharField(max_length=32,verbose_name='用户名',null=True)
+      pwd = models.CharField(max_length=256,verbose_name='密码',null=True)
+      on_line = models.CharField(max_length=256,verbose_name='状态',null=True)
+      update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
+      class Meta:
+          db_table = 'ddit_monitor_host'
+      
+      

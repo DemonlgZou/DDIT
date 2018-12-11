@@ -29,37 +29,22 @@
 					</div>
 
 					<div class="page-content">
-						<div class="page-header">
-							<h1>
-
-								<small>
-									<i class="icon-double-angle-right"></i>
-									Dynamic tables and grids using jqGrid plugin
-								</small>
-							</h1>
-						</div><!-- /.page-header -->
 
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
 
-								<div class="alert alert-info">
-									<i class="icon-hand-right"></i>
 
-									Please note that demo server is not configured to save the changes, therefore you may get an error message.
-									<button class="close" data-dismiss="alert">
-										<i class="icon-remove"></i>
-									</button>
-								</div>
 {% include 'templates.html' %}
 {% endblock %}
 {% block script_style %}
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    </div>
+    </div>
+    </div>
+    </div>
 
-		<!-- <![endif]-->
 
-		<!--[if IE]>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
 <![endif]-->
 
 		<!--[if !IE]> -->
@@ -98,30 +83,7 @@
 		<script type="text/javascript">
 			var grid_data = 
 			[ 
-				{id:"1",name:"Desktop Computer",note:"note",stock:"Yes",ship:"FedEx", sdate:"2007-12-03"},
-				{id:"2",name:"Laptop",note:"Long text ",stock:"Yes",ship:"InTime",sdate:"2007-12-03"},
-				{id:"3",name:"LCD Monitor",note:"note3",stock:"Yes",ship:"TNT",sdate:"2007-12-03"},
-				{id:"4",name:"Speakers",note:"note",stock:"No",ship:"ARAMEX",sdate:"2007-12-03"},
-				{id:"5",name:"Laser Printer",note:"note2",stock:"Yes",ship:"FedEx",sdate:"2007-12-03"},
-				{id:"6",name:"Play Station",note:"note3",stock:"No", ship:"FedEx",sdate:"2007-12-03"},
-				{id:"7",name:"Mobile Telephone",note:"note",stock:"Yes",ship:"ARAMEX",sdate:"2007-12-03"},
-				{id:"8",name:"Server",note:"note2",stock:"Yes",ship:"TNT",sdate:"2007-12-03"},
-				{id:"9",name:"Matrix Printer",note:"note3",stock:"No", ship:"FedEx",sdate:"2007-12-03"},
-				{id:"10",name:"Desktop Computer",note:"note",stock:"Yes",ship:"FedEx", sdate:"2007-12-03"},
-				{id:"11",name:"Laptop",note:"Long text ",stock:"Yes",ship:"InTime",sdate:"2007-12-03"},
-				{id:"12",name:"LCD Monitor",note:"note3",stock:"Yes",ship:"TNT",sdate:"2007-12-03"},
-				{id:"13",name:"Speakers",note:"note",stock:"No",ship:"ARAMEX",sdate:"2007-12-03"},
-				{id:"14",name:"Laser Printer",note:"note2",stock:"Yes",ship:"FedEx",sdate:"2007-12-03"},
-				{id:"15",name:"Play Station",note:"note3",stock:"No", ship:"FedEx",sdate:"2007-12-03"},
-				{id:"16",name:"Mobile Telephone",note:"note",stock:"Yes",ship:"ARAMEX",sdate:"2007-12-03"},
-				{id:"17",name:"Server",note:"note2",stock:"Yes",ship:"TNT",sdate:"2007-12-03"},
-				{id:"18",name:"Matrix Printer",note:"note3",stock:"No", ship:"FedEx",sdate:"2007-12-03"},
-				{id:"19",name:"Matrix Printer",note:"note3",stock:"No", ship:"FedEx",sdate:"2007-12-03"},
-				{id:"20",name:"Desktop Computer",note:"note",stock:"Yes",ship:"FedEx", sdate:"2007-12-03"},
-				{id:"21",name:"Laptop",note:"Long text ",stock:"Yes",ship:"InTime",sdate:"2007-12-03"},
-				{id:"22",name:"LCD Monitor",note:"note3",stock:"Yes",ship:"TNT",sdate:"2007-12-03"},
-				{id:"23",name:"Speakers",note:"note",stock:"No",ship:"ARAMEX",sdate:"2007-12-03"}
-			];	
+            ];
 			
 			jQuery(function($) {
 				var grid_selector = "#grid-table";
@@ -132,30 +94,30 @@
 					
 					data: grid_data,
 					datatype: "local",
-					height: 250,
-					colNames:[' ', 'ID','Last Sales','Name', 'Stock', 'Ship via','Notes',''],
+					height: 500,
+					colNames:[ 'ID','操作类型','操作动作', '执行主机', '执行内容','执行人','执行时间'],
 					colModel:[
-						{name:'myac',index:'', width:80, fixed:true, sortable:false, resize:false,
-							formatter:'actions', 
-							formatoptions:{ 
-								keys:true,
-								
-								delOptions:{recreateForm: true, beforeShowForm:beforeDeleteCallback},
-								//editformbutton:true, editOptions:{recreateForm: true, beforeShowForm:beforeEditCallback}
-							}
-						},
+						{#{name:'myac',index:'', width:80, fixed:true, sortable:false, resize:false,#}
+						{#	formatter:'actions', #}
+						{#	formatoptions:{ #}
+						{#		keys:true,#}
+						{#		#}
+						{#		delOptions:{recreateForm: true, beforeShowForm:beforeDeleteCallback},#}
+						{#		//editformbutton:true, editOptions:{recreateForm: true, beforeShowForm:beforeEditCallback}#}
+						{#	}#}
+
 						{name:'id',index:'id', width:60, sorttype:"int", editable: true},
-						{name:'sdate',index:'sdate',width:90, editable:true, sorttype:"date",unformat: pickDate},
-						{name:'name',index:'name', width:150,editable: true,editoptions:{size:"20",maxlength:"30"}},
-						{name:'stock',index:'stock', width:70, editable: true,edittype:"checkbox",editoptions: {value:"Yes:No"},unformat: aceSwitch},
-						{name:'ship',index:'ship', width:90, editable: true,edittype:"select",editoptions:{value:"FE:FedEx;IN:InTime;TN:TNT;AR:ARAMEX"}},
-						{name:'note',index:'note', width:150, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
-						{name:'',index:'note', width:50, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}}
+						{name:'type',index:'type',width:90, editable:true, sorttype:"date",unformat: pickDate},
+						{name:'action',index:'action', width:150,editable: true,editoptions:{size:"20",maxlength:"30"}},
+						{name:'host',index:'host', width:70, editable: true,edittype:"checkbox",editoptions: {value:"Yes:No"},unformat: aceSwitch},
+						{name:'info',index:'info', width:90, editable: true,edittype:"select",editoptions:{value:"FE:FedEx;IN:InTime;TN:TNT;AR:ARAMEX"}},
+						{name:'operator',index:'operator', width:150, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
+						{name:'create_at',index:'create_at', width:50, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}}
 					],
 			
 					viewrecords : true,
-					rowNum:10,
-					rowList:[10,20,30],
+					rowNum:15,
+					rowList:[15,20,30],
 					pager : pager_selector,
 					altRows: true,
 					//toppager: true,
@@ -176,7 +138,7 @@
 					},
 			
 					editurl: $path_base+"/dummy.html",//nothing is saved
-					caption: "jqGrid with inline editing",
+					caption: "操作日志",
 			
 			
 					autowidth: true
@@ -207,17 +169,17 @@
 				//navButtons
 				jQuery(grid_selector).jqGrid('navGrid',pager_selector,
 					{ 	//navbar options
-						edit: true,
+						edit: false,
 						editicon : 'icon-pencil blue',
-						add: true,
+						add: false,
 						addicon : 'icon-plus-sign purple',
-						del: true,
+						del: false,
 						delicon : 'icon-trash red',
 						search: true,
 						searchicon : 'icon-search orange',
 						refresh: true,
 						refreshicon : 'icon-refresh green',
-						view: true,
+						view: false,
 						viewicon : 'icon-zoom-in grey',
 					},
 					{
@@ -408,5 +370,5 @@
 			});
 		</script>
 {% endblock %}
-{#	<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div>#}
+
 

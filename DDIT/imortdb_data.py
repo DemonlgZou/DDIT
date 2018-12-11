@@ -181,13 +181,14 @@ def add_lichengbei2():
 def write_data():
     #写入资产数据
     data = xlrd.open_workbook(r'D:\DDIT\db_server\1111111.xlsx')
-    table = data.sheet_by_index(0)
+    table = data.sheet_by_index(1)
     nrows = table.nrows
     cols = table.ncols
     t = 0
     for i in range(0, int(nrows)):
-        if t > 1:
+        if t > 4:
                 info = (table.row_values(i))
+               
                 name = info[4]
                 Type = '台式机'
                 CPU = info[5]
@@ -201,18 +202,18 @@ def write_data():
                 Sound =info[11]
                 Disk =info[8]
                 user = info[0]
-                obj = models.Dictionary.objects.get(id=3)
+                print(user)
+                obj = models.Dictionary.objects.get(id=1)
                 arr1 = obj.arr1
                 arr2 = obj.arr2
                 arr3 = int(obj.arr3)
                 new_arr3 = arr3 +1
                 models.Dictionary.objects.update(arr3=str(new_arr3).zfill(6))
                 No = '%s-%s-%s%s'%(arr1,arr2,str((datetime.datetime.now().year)),str(new_arr3).zfill(6))
-               # print(No)
-              #  No =    arr3.zfill(6)
-              #  print(No)
-               # print(info[9])
-                #print(name,Type,CPU,memory,Bios,MAC,SN,NET,cd,Video,Sound,Disk)
+                print(No)
+               
+                print(info[9])
+                print(name,Type,CPU,memory,Bios,MAC,SN,NET,cd,Video,Sound,Disk)
                 obj = models.host_info.objects.create(name=name,type=Type,CPU=CPU,Memory=memory,Bios=Bios,MAC=MAC,SN=SN,Sound=Sound,Disk=Disk,CDrom=cd,NETWORK=NET,Video=Video)
                 models.Reserves.objects.create(name='办公电脑',Type=1,asset_No=No,price=0,company=0,contacts='无',manger_user=info[0],status=1,info_id=obj.id)
                 #models.host_info.objects.create(name=info[4],type='显示器',Display=info[9])

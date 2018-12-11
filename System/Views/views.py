@@ -7,16 +7,12 @@ import json, datetime,uuid,threading
 
 
 
-
-
 @auth
 def firewall(request):
 	#远程开通外网访问权限的方法
 	if request.is_ajax():
-		print(request.POST.get('on_line'))
 		obj = FROM.firewall_port(request.POST)
 		if obj.is_valid():
-			print(obj.cleaned_data)
 			for i in ['Dialer0','Dialer1']:
 				rule_name = str(uuid.uuid1()).replace('-','')
 				res = open_port('192.168.254.248','admin','DDit#20020607!',rule_name,
@@ -25,9 +21,12 @@ def firewall(request):
 				if res:
 					obj.cleaned_data.update({'rule_name':rule_name,'interface':i})
 					models.open_port.objects.create(**obj.cleaned_data)
-			return HttpResponse(json.dumps({'ok': '端口开通中'}), content_type="application/json")
+					models.log_system_info.objects.create(action_type='新增',opeater=request.session.get('user'),type='开通外网访问',
+					                                      info='nat server %s protocol %s global interface %s %s inside %s  %s no-reverse' % (rule_name,request.POST.get('type'),
+					                                                                                                                          i,str(request.POST.get('outside_port')),request.POST.get('host_ip'),str(request.POST.get('inside_port'))))
+			return HttpResponse(json.dumps({'ok': '端口已开通'}), content_type="application/json")
 		else:
-			print(obj.errors)
+			#print(obj.errors)
 			return HttpResponse(json.dumps({'ok': 'pk'}), content_type="application/json")
 	return render(request, 'port.html', menu_list(request))
 
@@ -92,3 +91,60 @@ def host_list(request):
 		return HttpResponse(json.dumps(data), content_type="application/json")
 	return render(request, 'host_list.html', menu_list(request))
 
+@auth
+def log(request):
+	if request.is_ajax():
+		if request.method == 'POST':
+			obj = models.log_system_info.objects.all()
+			res = Paging.page_list(request, obj)
+			rows = []
+			for i in res.get('data'):
+				tmp = {}
+				tmp.update(
+					{'id': i.id, 'action_type': i.action_type,
+					 'opeater':i.opeater, 'create_at': (i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),
+					 'type':i.type,'info':i.info})
+				rows.append(tmp)
+			data = {'page': res.get('page'),
+			        'total': res.get('last'),
+			        'records': res.get('records'), 'rows': rows}
+			return HttpResponse(json.dumps(data), content_type="application/json")
+	
+	return render(request,'log.html',menu_list(request))
+
+
+
+
+
+def monitoring_list(request):
+	if request.method == 'GET':
+		return render(request,'monitoring_list.html',menu_list(request))
+	elif request.is_ajax():
+		if request.method == 'POST':
+			obj = models.monitor_host.objects.all()
+			res = Paging.page_list(request, obj)
+			rows = []
+			for i in res.get('data'):
+				tmp = {}
+				tmp.update({'id': i.id, 'name': i.name, 'IP': i.ip, 'cpu': i.cpu, 'meminfo': i.meminfo, 'diskinfo': i.diskinfo,
+				            'on_line':i.on_line,'user':i.user,'create_at': (i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),
+				            'update_at': (i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
+				rows.append(tmp)
+			data = {'page': res.get('page'),
+			        'total': res.get('last'),
+			        'records': res.get('records'), 'rows': rows}
+			return HttpResponse(json.dumps(data), content_type="application/json")
+	
+	
+	
+	
+
+def add_monitor_host(request):
+	if request.method =='GET':
+
+		return render(request,'add_monitor_host.html',menu_list(request),)
+	elif request.is_ajax():
+		return render(request, 'add_monitor_host.html', menu_list(request), )
+
+
+	

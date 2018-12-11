@@ -7,4 +7,7 @@ urlpatterns = [
     url('vm_host.html/',views.vm,name='vm'),
     url('host_list.html/',views.host_list,name='host_list'),
     url('port_list.html/',views.firewall_list,name='port_list'),
+    url('system_log.html/',views.log,name='system_log'),
+    url('monitoring_list.html/',views.monitoring_list,name='monitoring_list'),
+    url('add_monitor_host.html/',views.add_monitor_host,name='add_monitor_host'),
 ]

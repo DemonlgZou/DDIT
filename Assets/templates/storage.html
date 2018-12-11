@@ -38,6 +38,10 @@
 
 {% include 'templates.html' %}
 {% endblock %}
+</div>
+</div>
+</div>
+</div>
 {% block script_style %}
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
@@ -91,18 +95,19 @@
                     url:'asserts_manager/assets_list.html/',
 					datatype: "json",
 					height: 500,
-					colNames:[ '序号','资产名','资产码','资产类型','资产价格', '资产状态','供货商','供货商联系人','管理人','设备信息','录入时间','更新时间'],
+					colNames:[ '序号','资产名','资产码','资产类型','资产价格','财务资产号', '资产状态','供货商','供货商联系人','管理人','设备信息','录入时间','更新时间'],
 					colModel:[
-						{name:'id',index:'id', width:30, sorttype:"int", editable: true},
+						{name:'id',index:'id', width:30, sorttype:"int", editable: false},
 						{name:'name',index:'name', width:60, sorttype:"string", editable: true},
 						{name:'no',index:'no', width:150, sorttype:"string", editable:true},
 						{name:'type',index:'type',width:60, editable:true, sorttype:"text",unformat: pickDate},
 						{name:'price',index:'price', width:60,editable: true,editoptions:{size:"20",maxlength:"30"}},
+						{name:'finance_id',index:'finance_id', width:60,editable: true,editoptions:{size:"20",maxlength:"30"}},
 						{name:'status',index:'status', width:50, editable: true,edittype:"text",editoptions: {value:"Yes:No"},unformat: aceSwitch},
 						{name:'company',index:'company', width:150, editable: true,edittype:"text",editoptions:{value:"FE:FedEx;IN:InTime;TN:TNT;AR:ARAMEX"}},
 						{name:'contacts',index:'contacts', width:80, sortable:false,editable: true,edittype:"text", editoptions:{rows:"2",cols:"10"}} ,
 						{name:'manger_user',index:'manger_user', width:150, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
-                        {name: 'host_id', index: 'host_id', width: 50, align: 'center', formatter: function(cellvalue, options, rowObject) {var detail = "<a href='http://127.0.0.1:8000/asserts_manager/info_list.html/"  + rowObject.id+" ' target='_blank'>查看 </ a>";return detail;},},
+                        {name: 'host_id', index: 'host_id', width: 50, align: 'center', formatter: function(cellvalue, options, rowObject) {var detail = "<a href= " +$path_base+ "asserts_manager/info_list.html/"  + rowObject.id+" ' target='_blank'>查看 </ a>";return detail;},},
 						{name:'create_at',index:'create_at', width:120, sortable:false,editable: false,edittype:"datefmt", editoptions:{rows:"2",cols:"10"}} ,
 						{name:'update_at',index:'update_at', width:120, sortable:false,editable: false,edittype:"datefmt", editoptions:{rows:"2",cols:"10"}} ,
 					],
@@ -362,5 +367,4 @@
 			});
 		</script>
 {% endblock %}
-{#	<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div>#}
 

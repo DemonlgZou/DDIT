@@ -20,8 +20,16 @@ def supplier(request):
 
             #修改数据
             elif request.POST.get('oper',None) == 'edit':
-                  obj = models.Company_info.objects.filter(id=request.POST.get('id')).update( name=request.POST.get('name'),contacts=request.POST.get('contacts'),Address=request.POST.get('Address'),phone=request.POST.get('phone'),bill=request.POST.get('bill'),type=request.POST.get('type'))
-                  return HttpResponse(json.dumps({'Status':'success',}))
+                 models.Company_info.objects.filter(id=request.POST.get('id')).update(
+                     name=request.POST.get('name'),
+                     contacts=request.POST.get('contacts'),
+                      phone=request.POST.get('phone'),
+                      type=request.POST.get('type'),
+                      Address=request.POST.get('Address'),
+                      bill=request.POST.get('bill'),
+                      buyer=request.POST.get(' buyer'))
+                      
+                 return HttpResponse(json.dumps({'Status':'success',}))
 
 
             #删除数据
@@ -38,7 +46,7 @@ def supplier(request):
                 rows = []
                 for i in res.get('data'):
                     tmp = {}
-                    tmp.update({'id':i.id,'name':i.name,'contacts':i.contacts,'phone':i.phone,'type':i.type,'Address':i.Address,'bill':i.bill,'buyer':i.buyer,'create_at':(i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),'update_at':(i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
+                    tmp.update({'id':i.id,'name':i.name,'contacts':i.contacts,'finance_id':i.finance_id,'phone':i.phone,'type':i.type,'Address':i.Address,'bill':i.bill,'buyer':i.buyer,'create_at':(i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),'update_at':(i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
                     rows.append(tmp)
                 data = {'page': res.get('page'),
                             'total': res.get('last'),
@@ -71,7 +79,8 @@ def supplier(request):
                               tmp.update({'id': i.id, 'name': i.name, 'contacts': i.contacts, 'phone': i.phone,
                                           'type': i.type, 'Address': i.Address, 'bill': i.bill, 'buyer': i.buyer,
                                           'create_at': (i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),
-                                          'update_at': (i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
+                                          'update_at': (i.update_at).strftime('%Y-%m-%dT%H:%M:%S'),
+                                          'finance_id':i.finance_id})
                               rows.append(tmp)
                           data = {'page': res.get('page'),
                                   'total': res.get('last'),
@@ -103,7 +112,17 @@ def assets(request):
     #固定资产视图
     if request.method == 'POST':
         if request.POST.get('oper', None) == 'edit':
-            obj = models.Reserves.objects.filter(id=request.POST.get('id')).update()
+            models.Reserves.objects.filter(id=request.POST.get('id')).update(
+            name=request.POST.get('name'),
+            asset_No= request.POST.get('no'),
+            Type= request.POST.get('type'),
+            price= request.POST.get('price'),
+            status= request.POST.get('status'),
+            company= request.POST.get('company'),
+            contacts= request.POST.get('contacts'),
+            manger_user = request.POST.get('manger_user'),
+            finance_id=request.POST.get('finance_id')
+            )
 
             return HttpResponse(json.dumps({'Status': 'success', }))
 
@@ -123,6 +142,7 @@ def assets(request):
                             'company': i.company,
                             'contacts': i.contacts,
                             'manger_user': i.manger_user,
+                            'finance_id': i.finance_id,
                             'host_id': i.info.id,
                             'create_at': i.create_at.strftime('%Y-%m-%dT%H:%M:%S'),
                             'update_at': i.update_at.strftime('%Y-%m-%dT%H:%M:%S')
@@ -164,6 +184,7 @@ def assets(request):
                             'contacts': i.contacts,
                             'manger_user': i.manger_user,
                             'host_id': i.info.id,
+                            'finance_id': i.finance_id,
                             'create_at': i.create_at.strftime('%Y-%m-%dT%H:%M:%S'),
                             'update_at': i.update_at.strftime('%Y-%m-%dT%H:%M:%S')
                             }

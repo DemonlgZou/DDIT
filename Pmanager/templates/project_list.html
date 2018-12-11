@@ -111,7 +111,7 @@
                          {name:'desc',index:'desc', width:80,search:false, sorttype:"date",unformat: pickDate,editable: true,edittype:"text", editoptions:{rows:"2",cols:"10"}},
                         {name:'create_at',index:'update_at', width:100,search:false, sorttype:"date",search:false,unformat: pickDate,editable: false,edittype:"datefmt", editoptions:{rows:"2",cols:"10"}} ,
                          {name:'update_at',index:'update_at', width:100,search:false, sorttype:"date",search:false,unformat: pickDate,editable: false,edittype:"datefmt", editoptions:{rows:"2",cols:"10"}} ,
-                         {name:'info',index:'update_at', width:40,formatter: function(cellvalue, options, rowObject) {var detail = "<a href=  $path_base+Pmanager/project_info.html/"  + rowObject.id+" ' target='_blank'>点击</ a>";return detail;}} ,
+                         {name:'info',index:'update_at', width:40,formatter: function(cellvalue, options, rowObject) {var detail = "<a href=" + $path_base+ "Pmanager/project_info.html/"  + rowObject.id+" ' target='_blank'>点击</ a>";return detail;}} ,
 					],
 			
 					viewrecords : true,
