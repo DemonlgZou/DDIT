@@ -12,45 +12,20 @@
 								<a href="/web/index.html">主页</a>
 							</li>
 
-							<li>
-								<a href="#">图片管理</a>
-							</li>
-							<li class="active">图片信息</li>
+
 						</ul><!-- .breadcrumb -->
 
-						<div class="nav-search" id="nav-search">
-							<form class="form-search">
-								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
-									<i class="icon-search nav-search-icon"></i>
-								</span>
-							</form>
-						</div><!-- #nav-search -->
+
 					</div>
 
 					<div class="page-content">
-						<div class="page-header">
-							<h1>
 
-								<small>
-									<i class="icon-double-angle-right"></i>
-									实时记录图片情况
-								</small>
-							</h1>
-						</div><!-- /.page-header -->
 
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
 
-								<div class="alert alert-info">
-									<i class="icon-hand-right"></i>
 
-
-									<button class="close" data-dismiss="alert">
-										<i class="icon-remove"></i>
-									</button>
-								</div>
 {% include 'templates.html' %}
 {% endblock %}
 {% block script_style %}
@@ -103,7 +78,7 @@
 				jQuery(grid_selector).jqGrid({
 					//direction: "rtl",
 					mtype:"post",
-                    url:'/api/image_list/',
+                    url:$path_base+'/api/image_list/',
                     ajaxGridOptions:{headers: {"X-CSRFToken": '{{  csrf_token}}'},
                         error:function (XMLHttpRequest, textStatus){alert(111)
                         var dataJson = JSON.parse(XMLHttpRequest.responseText);

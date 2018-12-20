@@ -35,20 +35,15 @@
 
 						<div class="row">
 							<div class="col-xs-12">
-								<!-- PAGE CONTENT BEGINS -->
 
-{#								<div class="alert alert-info">#}
-{#									<i class="icon-hand-right"></i>#}
-{##}
-{#									#}
-{#									<button class="close" data-dismiss="alert">#}
-{#										<i class="icon-remove"></i>#}
-{#									</button>#}
-{#								</div>#}
 {% include 'templates.html' %}
 {% endblock %}
-{% block script_style %}
+</div>
+</div>
+</div>
+</div>
 
+{% block script_style %}
 
 		<script type="text/javascript">
 			window.jQuery || document.write("<script src='/static/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
@@ -85,7 +80,7 @@
 			
 				jQuery(grid_selector).jqGrid({
 					//direction: "rtl",
-					url: "system_manager/port_list.html/",
+					url: $path_base+"system_manager/port_list.html/",
                     mtype: "post",
 					{#data: grid_data,#}
 					datatype: "json",
@@ -163,11 +158,11 @@
 				//navButtons
 				jQuery(grid_selector).jqGrid('navGrid',pager_selector,
 					{ 	//navbar options
-						edit: true,
+						edit: false,
 						editicon : 'icon-pencil blue',
-						add: true,
+						add: false,
 						addicon : 'icon-plus-sign purple',
-						del: true,
+						del: false,
 						delicon : 'icon-trash red',
 						search: true,
 						searchicon : 'icon-search orange',
@@ -364,4 +359,3 @@
 			});
 		</script>
 {% endblock %}
-{#	<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div>#}

@@ -92,8 +92,9 @@
 				jQuery(grid_selector).jqGrid({
 					//direction: "rtl",
 					
-					data: grid_data,
-					datatype: "local",
+					data: grid_data, mtype: 'post',
+                    url: $path_base+'system_manager/system_log.html/',
+					datatype: "json",
 					height: 500,
 					colNames:[ 'ID','操作类型','操作动作', '执行主机', '执行内容','执行人','执行时间'],
 					colModel:[
@@ -106,12 +107,12 @@
 						{#		//editformbutton:true, editOptions:{recreateForm: true, beforeShowForm:beforeEditCallback}#}
 						{#	}#}
 
-						{name:'id',index:'id', width:60, sorttype:"int", editable: true},
-						{name:'type',index:'type',width:90, editable:true, sorttype:"date",unformat: pickDate},
-						{name:'action',index:'action', width:150,editable: true,editoptions:{size:"20",maxlength:"30"}},
-						{name:'host',index:'host', width:70, editable: true,edittype:"checkbox",editoptions: {value:"Yes:No"},unformat: aceSwitch},
-						{name:'info',index:'info', width:90, editable: true,edittype:"select",editoptions:{value:"FE:FedEx;IN:InTime;TN:TNT;AR:ARAMEX"}},
-						{name:'operator',index:'operator', width:150, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
+						{name:'id',index:'id', width:10, sorttype:"int", editable: true},
+						{name:'type',index:'type',width:30, editable:true, sorttype:"date",unformat: pickDate},
+						{name:'action_type',index:'action_type', width:20,editable: true,editoptions:{size:"20",maxlength:"30"}},
+						{name:'host',index:'host', width:40, editable: true,edittype:"checkbox",editoptions: {value:"Yes:No"},unformat: aceSwitch},
+						{name:'info',index:'info', width:200, editable: true,edittype:"select",editoptions:{value:"FE:FedEx;IN:InTime;TN:TNT;AR:ARAMEX"}},
+						{name:'opeater',index:'opeater', width:30, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
 						{name:'create_at',index:'create_at', width:50, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}}
 					],
 			

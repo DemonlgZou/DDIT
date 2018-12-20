@@ -76,7 +76,7 @@ def vm(request):
 @auth
 def host_list(request):
 	if request.method == 'POST':
-		obj = models.Server_info.objects.all()
+		obj = models.Server_info.objects.all().order_by('id')
 		res = Paging.page_list(request, obj)
 		rows = []
 		for i in res.get('data'):
@@ -95,7 +95,7 @@ def host_list(request):
 def log(request):
 	if request.is_ajax():
 		if request.method == 'POST':
-			obj = models.log_system_info.objects.all()
+			obj = models.log_system_info.objects.all().order_by('id')
 			res = Paging.page_list(request, obj)
 			rows = []
 			for i in res.get('data'):
@@ -103,11 +103,12 @@ def log(request):
 				tmp.update(
 					{'id': i.id, 'action_type': i.action_type,
 					 'opeater':i.opeater, 'create_at': (i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),
-					 'type':i.type,'info':i.info})
+					 'type':i.type,'info':i.info,'host':i.host})
 				rows.append(tmp)
 			data = {'page': res.get('page'),
 			        'total': res.get('last'),
 			        'records': res.get('records'), 'rows': rows}
+	        
 			return HttpResponse(json.dumps(data), content_type="application/json")
 	
 	return render(request,'log.html',menu_list(request))
@@ -121,14 +122,25 @@ def monitoring_list(request):
 		return render(request,'monitoring_list.html',menu_list(request))
 	elif request.is_ajax():
 		if request.method == 'POST':
-			obj = models.monitor_host.objects.all()
+			obj = models.monitor_host.objects.all().order_by('id')
 			res = Paging.page_list(request, obj)
 			rows = []
 			for i in res.get('data'):
+				stat = models.monitor_stat.objects.filter(ip=i.ip).last()
+				
 				tmp = {}
-				tmp.update({'id': i.id, 'name': i.name, 'IP': i.ip, 'cpu': i.cpu, 'meminfo': i.meminfo, 'diskinfo': i.diskinfo,
-				            'on_line':i.on_line,'user':i.user,'create_at': (i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),
-				            'update_at': (i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
+				if stat:
+					tmp.update({'id': i.id, 'name': i.name, 'IP': i.ip, 'cpu':  stat.cpu if stat.cpu else '-' ,
+					            'meminfo': stat.meminfo if stat.meminfo else '-', 'diskinfo': stat.diskinfo  if stat.diskinfo else '-' ,
+					            'on_line':i.on_line,'user':i.user,'create_at': (stat.create_at).strftime('%Y-%m-%dT%H:%M:%S'),
+					            'update_at': (i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
+				else:
+					tmp.update({'id': i.id, 'name': i.name, 'IP': i.ip, 'cpu': '-',
+					            'meminfo': '-',
+					            'diskinfo':  '-',
+					            'on_line': i.on_line, 'user': i.user,
+					            #'create_at': (stat.create_at).strftime('%Y-%m-%dT%H:%M:%S'),
+					            'update_at': (i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
 				rows.append(tmp)
 			data = {'page': res.get('page'),
 			        'total': res.get('last'),
@@ -147,4 +159,42 @@ def add_monitor_host(request):
 		return render(request, 'add_monitor_host.html', menu_list(request), )
 
 
+
+	
+def get_client_ip(request):
+	try:
+		real_ip = request.META['HTTP_X_FORWARDED_FOR']
+		regip = real_ip.split(",")[0]
+	except:
+		try:
+			regip = request.META['REMOTE_ADDR']
+		except:
+			regip = ""
+
+	return regip
+
+
+def revice_info(request):
+	if request.method == 'POST':
+		
+		return HttpResponse('ok')
+	
+def vm_manager(request):
+	if request.method == 'POST':
+		obj = models.Server_info.objects.filter(server__in=['虚拟机','容器']).order_by('id')
+		res = Paging.page_list(request, obj)
+		rows = []
+		for i in res.get('data'):
+			tmp = {}
+			status = models.monitor_host.objects.get(ip=i.IP).on_line
+			tmp.update({'id': i.id, 'name': i.name, 'IP': i.IP, 'server': i.server, 'OS': i.OS,
+			            'status': status, 'create_at': (i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),
+			            'update_at': (i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
+			rows.append(tmp)
+		data = {'page': res.get('page'),
+		        'total': res.get('last'),
+		        'records': res.get('records'), 'rows': rows}
+		return HttpResponse(json.dumps(data), content_type="application/json")
+	
+	return render(request,'vm_list.html',menu_list(request))
 	

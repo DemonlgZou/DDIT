@@ -10,4 +10,6 @@ urlpatterns = [
     url('system_log.html/',views.log,name='system_log'),
     url('monitoring_list.html/',views.monitoring_list,name='monitoring_list'),
     url('add_monitor_host.html/',views.add_monitor_host,name='add_monitor_host'),
+    url('revice_info',views.revice_info),
+    url('vm_manager/list.html/',views.vm_manager,name='vm_manager'),
 ]

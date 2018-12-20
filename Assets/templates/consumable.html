@@ -103,7 +103,7 @@
 				jQuery(grid_selector).jqGrid({
 					//direction: "rtl",
 					mtype:"post",
-                    url:'asserts_manager/assets_list.html/',
+                    url:$path_base+'asserts_manager/assets_list.html/',
                     {#ajaxGridOptions:{headers: {"X-CSRFToken": '{{  csrf_token}}'},#}
                     {#    error:function (XMLHttpRequest, textStatus){alert(111)#}
                     {#    var dataJson = JSON.parse(XMLHttpRequest.responseText);#}

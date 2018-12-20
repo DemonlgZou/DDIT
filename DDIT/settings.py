@@ -22,6 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '02onl46-tfa*&7m3$7j6386td++(#px+mj--9agb2vkrn!zaps'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+#DEBUG = False
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
@@ -134,7 +135,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 #print(BASE_DIR)
-STATICFILES_DIRS = [os.path.join(BASE_DIR,r'static',),os.path.join(BASE_DIR,r'Assets',r'static'),os.path.join(BASE_DIR,r'System',r'static'),os.path.join(BASE_DIR,r'Pmanager',r'static'),]
+STATICFILES_ROOT = os.path.join(BASE_DIR,'/static/')
+STATICFILES_DIRS = [os.path.join(BASE_DIR,r'static',),]
+#STATICFILES_DIRS = [os.path.join(BASE_DIR,r'static',),os.path.join(BASE_DIR,r'Assets',r'static'),os.path.join(BASE_DIR,r'System',r'static'),os.path.join(BASE_DIR,r'Pmanager',r'static'),]
 #print(STATICFLES_DIRS)
 
 CRONJOBS = [

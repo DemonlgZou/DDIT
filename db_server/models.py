@@ -236,30 +236,48 @@ class create_vm (models.Model):
         
 
 class log_system_info(models.Model):
+    #端口操作日志
     action_type = models.CharField(verbose_name='操作类型',max_length=128)
     opeater = models.CharField(verbose_name='操作人员',max_length=128)
     type = models.CharField(verbose_name='操作类型',max_length=128)
     info = models.CharField(verbose_name='操作日志',max_length=128)
     create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
+    host = models.CharField(verbose_name='执行主机',max_length=128)
    
     class Meta:
         db_table = 'ddit_system_info'
+
+
+class log_vm_info(models.Model):
+    #创建虚拟机操作日志
+    action_type = models.CharField(verbose_name='操作类型', max_length=128)
+    opeater = models.CharField(verbose_name='操作人员', max_length=128)
+    type = models.CharField(verbose_name='操作类型', max_length=128)
+    info = models.CharField(verbose_name='操作日志', max_length=128)
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
+    host = models.CharField(verbose_name='执行主机', max_length=128)
     
-    
+    class Meta:
+        db_table = 'ddit_vm_info'
 
 class monitor_host(models.Model):
       name = models.CharField(max_length=128,verbose_name='机器名')
       ip = models.GenericIPAddressField(unique=True,verbose_name='主机地址')
-      cpu = models.FloatField(verbose_name='CPU百分比',null=True)
-      meminfo = models.FloatField(verbose_name='内存百分比',null=True)
-      diskinfo = models.FloatField(verbose_name='磁盘百分比',null=True)
-      netinfo = models.FloatField(verbose_name='网络百分比',null=True)
-      create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
       user = models.CharField(max_length=32,verbose_name='用户名',null=True)
       pwd = models.CharField(max_length=256,verbose_name='密码',null=True)
       on_line = models.CharField(max_length=256,verbose_name='状态',null=True)
       update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
+      create_at = models.DateTimeField(verbose_name='创建时间', null=True, max_length=128)
       class Meta:
           db_table = 'ddit_monitor_host'
       
       
+class monitor_stat(models.Model):
+    cpu = models.CharField(verbose_name='CPU百分比', null=True,max_length=128)
+    meminfo = models.CharField(verbose_name='内存百分比', null=True,max_length=128)
+    diskinfo = models.CharField(verbose_name='磁盘百分比', null=True,max_length=128)
+    netinfo = models.CharField(verbose_name='网络百分比', null=True,max_length=128)
+    create_at = models.DateTimeField(verbose_name='创建时间', null=True,max_length=128)
+    ip = models.CharField(max_length=128, verbose_name='主机地址')
+    class Meta:
+        db_table = 'ddit_monitor_stat'

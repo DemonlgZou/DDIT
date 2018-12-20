@@ -37,15 +37,6 @@
 {% include 'templates.html' %}
 {% endblock %}
 {% block script_style %}
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-		<!-- <![endif]-->
-
-		<!--[if IE]>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<![endif]-->
-
-		<!--[if !IE]> -->
 
 		<script type="text/javascript">
 			window.jQuery || document.write("<script src='/static/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
@@ -79,17 +70,14 @@
 		<!-- inline scripts related to this page -->
 
 		<script type="text/javascript">
-			var grid_data =
-			[
-			];	
-			
+
 			jQuery(function($) {
 				var grid_selector = "#grid-table";
 				var pager_selector = "#grid-pager";
 			
 				jQuery(grid_selector).jqGrid({
 					//direction: "rtl",
-					url: "system_manager/host_list.html/",
+					url: $path_base+"system_manager/host_list.html/",
                     mtype: "post",
 					{#data: grid_data,#}
 					datatype: "json",

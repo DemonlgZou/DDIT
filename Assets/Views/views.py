@@ -24,10 +24,10 @@ def supplier(request):
                      name=request.POST.get('name'),
                      contacts=request.POST.get('contacts'),
                       phone=request.POST.get('phone'),
-                      type=request.POST.get('type'),
+                     
                       Address=request.POST.get('Address'),
-                      bill=request.POST.get('bill'),
-                      buyer=request.POST.get(' buyer'))
+                      bill= request.POST.get('bill'),
+                      buyer= request.POST.get('type'))
                       
                  return HttpResponse(json.dumps({'Status':'success',}))
 
@@ -46,7 +46,7 @@ def supplier(request):
                 rows = []
                 for i in res.get('data'):
                     tmp = {}
-                    tmp.update({'id':i.id,'name':i.name,'contacts':i.contacts,'finance_id':i.finance_id,'phone':i.phone,'type':i.type,'Address':i.Address,'bill':i.bill,'buyer':i.buyer,'create_at':(i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),'update_at':(i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
+                    tmp.update({'id':i.id,'name':i.name,'contacts':i.contacts,'phone':i.phone,'type':i.type,'Address':i.Address,'bill':i.bill,'buyer':i.buyer,'create_at':(i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),'update_at':(i.update_at).strftime('%Y-%m-%dT%H:%M:%S')})
                     rows.append(tmp)
                 data = {'page': res.get('page'),
                             'total': res.get('last'),
@@ -80,7 +80,7 @@ def supplier(request):
                                           'type': i.type, 'Address': i.Address, 'bill': i.bill, 'buyer': i.buyer,
                                           'create_at': (i.create_at).strftime('%Y-%m-%dT%H:%M:%S'),
                                           'update_at': (i.update_at).strftime('%Y-%m-%dT%H:%M:%S'),
-                                          'finance_id':i.finance_id})
+                                         })
                               rows.append(tmp)
                           data = {'page': res.get('page'),
                                   'total': res.get('last'),
