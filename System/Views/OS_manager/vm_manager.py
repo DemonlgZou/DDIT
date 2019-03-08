@@ -1,4 +1,4 @@
-import os,json,requests,psutil,datetime,socket,schedule
+import os,json,requests,psutil,datetime,socket,schedule,paramiko
 
 
 def listen():
@@ -31,13 +31,30 @@ def listen():
 	res = requests.post(url,data=info,)
 
 
-try:
+	# try:
+	#
+	# 	schedule.every(60).seconds.do(listen)
+	# 	while True:
+	# 		schedule.run_pending()
+	#
+	# except Exception as e:
+	#
+	# 	pass
 
-	schedule.every(60).seconds.do(listen)
-	while True:
-		schedule.run_pending()
+class VmManger(object):
+	def __init__(self,ip,port,user,pwd,type):
+		self.ip = ip
+		self.port = port
+		self.user = user
+		self.pwd = pwd
+		self.type = type
 		
-except Exception as e:
-	
-	pass
-
+	def start(self):
+		ssh = paramiko.SSHClient()
+		ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+		ssh.connect(self.ip, self.port, self.user, self.pwd)
+		stdin,stdout,stderr = ssh.exec_command('ls')
+		if stdout:
+			print('123')
+		else:
+			print(stderr)

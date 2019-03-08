@@ -87,7 +87,7 @@
 					//direction: "rtl",
 					url: $path_base+"Pmanager/project_list.html/",
                     mtype: "post",
-					{#data: grid_data,#}
+					ajaxGridOptions:{headers: {"X-CSRFToken":'{{csrf_token}}'}},
 					datatype: "json",
 					height: 500,
 					colNames:[ '序号','合同编号','合同开始日期','合同结束日期', '合同金额', '预期工作量','编号','名称','分类','业务标识内','业务表示外','PM','执行方','责任方','阶段','上线时间','备注说明','创建时间','更新时间','明细'],

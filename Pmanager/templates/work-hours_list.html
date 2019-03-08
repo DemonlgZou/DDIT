@@ -81,7 +81,7 @@
 					//direction: "rtl",
 					url: $path_base+"Pmanager/work_hours.html/",
                     mtype: "post",
-					{#data: grid_data,#}
+					ajaxGridOptions:{headers: {"X-CSRFToken":'{{csrf_token}}'}},
 					datatype: "json",
 					height: 500,
 					colNames:[ '序号','项目名称','项目分类','一月', '二月', '三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月','年份','创建时间','更新时间'],

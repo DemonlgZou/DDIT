@@ -595,8 +595,8 @@
                  url :'asserts_manager/add.html/',
                  datatype: 'json',
                  data: data_info,
+                 headers:{"X-CSRFToken":'{{csrf_token}}'},
                  success: function (data) {
-
                      if (data.status){
                          alert('入库成功！')
                      }

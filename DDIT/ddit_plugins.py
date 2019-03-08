@@ -37,7 +37,6 @@ def Fliter_1(request, Mod):
         print(request.POST.get('searchField'),request.POST.get('searchString'))
         obj = Mod.filter(
             **{request.POST.get('searchField'): request.POST.get('searchString')}).all().order_by('id')
-
     elif request.POST.get('searchOper') == 'ne':
         obj = Mod.filter(
             ~models.Q(**{request.POST.get('searchField'): request.POST.get('searchString')})).all().order_by('id')

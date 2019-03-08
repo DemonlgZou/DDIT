@@ -83,7 +83,7 @@
 					//direction: "rtl",
 					url: $path_base+"asserts_manager/supplier.html/",
                     mtype: "post",
-					{#data: grid_data,#}
+					ajaxGridOptions:{headers: {"X-CSRFToken":'{{csrf_token}}'}},
 					datatype: "json",
 					height: 500,
 					colNames:[ '序号','公司名','联系人', '电话', '位置','采购类型','开票类型','创建时间','更新时间'],

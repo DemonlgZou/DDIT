@@ -7,6 +7,9 @@ from DDIT.ddit_plugins import auth, menu_list, search_rules, Fliter_1, Fliter_2
 from DDIT.imortdb_data import *
 from DDIT import FROM
 import  datetime
+
+
+
 @auth
 def pm_list(request):
 	#####项目相关内容列表
@@ -173,7 +176,7 @@ def pm_work(request):
 			                                                                   arr7=float(arr7), arr8=float(arr8),
 			                                                                   arr9=float(arr9), arr10=float(arr10),
 			                                                                   arr11=float(arr11), arr12=float(arr12),
-			                                                                   date=date)
+			                                                                   date=date).order_by('id')
 			
 			return HttpResponse(json.dumps({'Status': 'success', }))
 		
@@ -187,18 +190,15 @@ def pm_work(request):
 		####匹配查询返回数据信息###
 		elif request.POST.get('_search', None) == 'true':
 			if request.POST.get('searchOper') in search_rules.get('rules1'):
-				
 				# 通过项目名查询
 				if request.POST.get('searchField') == 'name':
 					tmp = models.PM_list.objects.filter(
 						father_name=request.POST.get('searchString')).values_list('id', flat=True, )
-				
 					q1 = models.Q()
 					q1.connector = 'OR'
 					for i in tmp:
 						q1.children.append(('item_id', i))
 					obj = models.Work_hours.objects.filter(q1).all()
-					
 					res = Paging.page_list(request, obj)
 					rows = []
 					for i in res.get('data'):
@@ -235,7 +235,7 @@ def pm_work(request):
 					q1.connector = 'OR'
 					for i in tmp:
 						q1.children.append(('item_id', i))
-					obj = models.Work_hours.objects.filter(q1).all()
+					obj = models.Work_hours.objects.filter(q1).all().order_by('id')
 					
 				
 				# 通过其他字段查询
@@ -287,13 +287,13 @@ def pm_add(request):
 		f = FROM.add_project(request.POST)
 		if f.is_valid():
 			data = f.cleaned_data
-			# obj = models.PM_list.objects.create(**data)
-			# models.period.objects.create(no_id=obj.id)
-			# models.Work_hours.objects.create(item_id=obj.id)
+			obj = models.PM_list.objects.create(**data)
+			models.period.objects.create(no_id=obj.id)
+			models.Work_hours.objects.create(item_id=obj.id)
 			data1 = {'data':'项目创建成功'}
 			return HttpResponse(json.dumps(data1), content_type="application/json")
 		else:
-			 print(f.errors)
+			 #print(f.errors)
 			 data1 = {'data':'缺少参数，请确认所有参数都已填写！'}
 			 
 			 return HttpResponse(json.dumps(data1), content_type="application/json")
@@ -335,7 +335,6 @@ def pm_period(request):
 			'delay': request.POST.get('delay'),
 			'plan_no': request.POST.get('plan_no'),
 			'Evaluation': request.POST.get('plan_no'),}
-			
 			models.period.objects.filter(id=request.POST.get('id')).update(**info)
 		elif request.POST.get('oper', None) == 'add':
 			id = models.PM_list.objects.get(pid=request.POST.get('pid'))
@@ -353,7 +352,6 @@ def pm_period(request):
 		#####匹配查询
 		elif request.POST.get('_search', None) == 'true':
 			if request.POST.get('searchOper') in search_rules.get('rules1'):
-				
 				# 通过项编号查询
 				if request.POST.get('searchField') == 'pid' :
 					tmp = models.PM_list.objects.get(
@@ -382,11 +380,9 @@ def pm_period(request):
 					        'total': res.get('last'),
 					        'records': res.get('records'), 'rows': rows}
 					return HttpResponse(json.dumps(data), content_type="application/json")
-			
 			elif request.POST.get('searchField') == 'id' and request.POST.get('searchOper') in search_rules.get(
 					'rules2'):
 				obj = Paging.page_list(request, Fliter_2(request, models.period.objects))
-			
 			elif request.POST.get('searchOper') in search_rules.get('rules3'):
 				####后续调整
 				pass

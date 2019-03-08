@@ -121,6 +121,7 @@ class Server_info(models.Model):
     desric = models.CharField(verbose_name='说明', max_length=128, null=True)
     status = models.CharField(max_length=128, verbose_name='服务器状态', null=True)
     server = models.CharField(verbose_name='服务器类型', max_length=4, null=True)
+    type = models.CharField(verbose_name='虚拟化技术类型',max_length=128,null=True)
     true_server = models.CharField(max_length=128, verbose_name='宿主机', null=True)
     create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
     update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
@@ -281,3 +282,29 @@ class monitor_stat(models.Model):
     ip = models.CharField(max_length=128, verbose_name='主机地址')
     class Meta:
         db_table = 'ddit_monitor_stat'
+
+
+class WIFI_OPEARTION_RECORD(models.Model):
+    #action 代表操作动作 主要有3类 新增、删除和强制下线
+    #info 代表具体操作命令
+    action = models.CharField(max_length=128,verbose_name='动作内容')
+    created_at = models.DateField(verbose_name='操作时间',null=True,auto_created=True,auto_now=True)
+    opearter = models.CharField(verbose_name='操作人员',max_length=128)
+    info = models.TextField(verbose_name='操作内容')
+
+    class Meta:
+        db_table = 'ddit_wifi_opeartion_record'
+        
+class WIFI_USERS_LIST(models.Model):
+    #user_type 1代表是正常用户,2代表是guest用户,
+    # mode 1代表是长期用户,2代表是临时用户
+    user = models.CharField(max_length=128,verbose_name='用户名',unique=True)
+    pwd = models.CharField(max_length=128,verbose_name='密码')
+    mode = models.SmallIntegerField(verbose_name='授权类型')
+    created_at = models.DateField(verbose_name='创建时间',null=True,auto_created=True,auto_now=True)
+    expired_at = models.DateField(verbose_name='到期时间',null=True)
+    user_type = models.SmallIntegerField(verbose_name='用户类型')
+    class Meta:
+        db_table = 'ddit_wifi_user_list'
+        
+

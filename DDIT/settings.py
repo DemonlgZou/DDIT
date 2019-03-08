@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-#    'django.middleware.csrf.CsrfViewMiddleware',
+  #  'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'DDIT.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
+#
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -90,13 +90,13 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'ddit_CMDB',
+#         'NAME': 'tmep',
 #         'USER':'root',
 #         'PASSWORD':'root',
 #         'HOST':'192.168.100.233',
 #         'PORT':'3306',
 #     }
-#}
+# }
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -134,11 +134,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-#print(BASE_DIR)
-STATICFILES_ROOT = os.path.join(BASE_DIR,'/static/')
+
+#STATIC_ROOT = os.path.join(BASE_DIR,'/static/')
 STATICFILES_DIRS = [os.path.join(BASE_DIR,r'static',),]
-#STATICFILES_DIRS = [os.path.join(BASE_DIR,r'static',),os.path.join(BASE_DIR,r'Assets',r'static'),os.path.join(BASE_DIR,r'System',r'static'),os.path.join(BASE_DIR,r'Pmanager',r'static'),]
-#print(STATICFLES_DIRS)
+
 
 CRONJOBS = [
 ('*/1 * * * *', 'System.Views.cron.check_port_excess' ,'> /home/logs'),

@@ -11,7 +11,7 @@ def add_contacts():
     for i in range(0,int(nrows)):
         if t not in [0,8,12,13,16,17,19,23,25,27]:
             info =(table.row_values(i))
-            print(info)
+            #print(info)
             name = info[2]
             Address = info[3]
             phone = info[4]
@@ -90,7 +90,7 @@ def add_hetong():
     for i in range(0, int(nrows)):
         if t > 0:
             info = table.row_values(i)
-            print(info[1:8])
+            #print(info[1:8])
             contract_id = info[1]
             contract_start = info[2]
             contract_end = info[3]
@@ -118,17 +118,17 @@ def add_lichengbei1():
     for i in range(0, int(nrows)):
         if t >0:
             info = table.row_values(i)
-            print(info[7])
+            #print(info[7])
             try:
                 pid = models.PM_list.objects.get(pid=info[7]).id
-                print(pid)
+                #print(pid)
                 task1_name = info[12] if info[12] != '' else None
                 start_at = info[13]
                 end_at =  info[14]
                 delay =   info[15]
                 plan_no = info[16]
                 Evaluation = info[18]
-                print(info[12:19])
+                #print(info[12:19])
                 #no = info[7]
                 models.period.objects.create(**{'name':task1_name,
                                                 'start_at':start_at,
@@ -153,17 +153,17 @@ def add_lichengbei2():
     for i in range(0, int(nrows)):
         if t >0:
             info = table.row_values(i)
-            print(info[7])
+            #print(info[7])
             try:
                 pid = models.PM_list.objects.get(pid=info[7]).id
-                print(pid)
+                #print(pid)
                 task1_name = info[19] if info[19] != '' else None
                 start_at = info[20]
                 end_at =  info[21]
                 delay =   info[22]
                 plan_no = info[23]
                 Evaluation = info[24]
-                print(info[19:25])
+                #print(info[19:25])
                 #no = info[7]
                 models.period.objects.create(**{'name':task1_name,
                                                 'start_at':start_at,
@@ -188,7 +188,6 @@ def write_data():
     for i in range(0, int(nrows)):
         if t > 4:
                 info = (table.row_values(i))
-               
                 name = info[4]
                 Type = '台式机'
                 CPU = info[5]
@@ -202,7 +201,7 @@ def write_data():
                 Sound =info[11]
                 Disk =info[8]
                 user = info[0]
-                print(user)
+                #print(user)
                 obj = models.Dictionary.objects.get(id=1)
                 arr1 = obj.arr1
                 arr2 = obj.arr2
@@ -210,10 +209,9 @@ def write_data():
                 new_arr3 = arr3 +1
                 models.Dictionary.objects.update(arr3=str(new_arr3).zfill(6))
                 No = '%s-%s-%s%s'%(arr1,arr2,str((datetime.datetime.now().year)),str(new_arr3).zfill(6))
-                print(No)
-               
-                print(info[9])
-                print(name,Type,CPU,memory,Bios,MAC,SN,NET,cd,Video,Sound,Disk)
+                #print(No)
+                #print(info[9])
+                #print(name,Type,CPU,memory,Bios,MAC,SN,NET,cd,Video,Sound,Disk)
                 obj = models.host_info.objects.create(name=name,type=Type,CPU=CPU,Memory=memory,Bios=Bios,MAC=MAC,SN=SN,Sound=Sound,Disk=Disk,CDrom=cd,NETWORK=NET,Video=Video)
                 models.Reserves.objects.create(name='办公电脑',Type=1,asset_No=No,price=0,company=0,contacts='无',manger_user=info[0],status=1,info_id=obj.id)
                 #models.host_info.objects.create(name=info[4],type='显示器',Display=info[9])
@@ -234,10 +232,10 @@ def add_port():
                     rule_out = a[9]
                     rule_in = a[12]
                     rule_ip = a[11]
-                    print(rule_name, rule_in, rule_out, rule_type, rule_ip)
+                   
                     models.open_port.objects.create(proposer='管理员',dept='管理员',rule_name=rule_name,
                                                     type=rule_type,host_ip=rule_ip,inside_port=rule_in,
                                                     outside_port=rule_out,on_line=True,interface=interface)
-                    
+                    #print(rule_name, rule_in, rule_out, rule_type, rule_ip)
             t += 1
             

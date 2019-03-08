@@ -1,6 +1,6 @@
 import pexpect,paramiko,logging,hashlib,datetime,time,telnetlib
 from io import StringIO
-from db_server import models
+#from db_server import models
 
 
 def open_port(ip,user,pwd,rule_name,type,interface,outside,host_ip,inside):
@@ -23,7 +23,7 @@ def open_port(ip,user,pwd,rule_name,type,interface,outside,host_ip,inside):
       a.expect('Enter system view')
       #print(a.before,a.after)
       a.sendline(add_port_cmd)
-      a.expect(today)
+      a.expect(today+'*')
       #print(a.before,a.after)
       a.sendline('quit')
       a.expect('<USG6300>')
@@ -37,14 +37,14 @@ def open_port(ip,user,pwd,rule_name,type,interface,outside,host_ip,inside):
       return False
 
 
-def colse_port(ip, user, pwd, rule_name, ):
+def close_port(ip, user, pwd, rule_name, ):
     # 操作防火墙开放端口的命令
     try:
         
         today = datetime.datetime.now().date()
         today = str(today).replace('-', '/')
         # print(today)
-        add_port_cmd = 'undo nat server %s' % (
+        remove_port_cmd = 'undo nat server %s' % (
         rule_name)
         # print(add_port_cmd)
         a = pexpect.spawn('telnet %s' % ip)
@@ -57,9 +57,9 @@ def colse_port(ip, user, pwd, rule_name, ):
         a.sendline('sys')
         a.expect('Enter system view')
         # print(a.before,a.after)
-        a.sendline(add_port_cmd)
+        a.sendline(remove_port_cmd)
         a.expect(today)
-        # print(a.before,a.after)
+        #print(a.before,a.after)
         a.sendline('quit')
         a.expect('<USG6300>')
         a.sendline('save')
@@ -77,4 +77,4 @@ def create_vm():
    #vm_type1 kvm
 
 
-
+close_port('192.168.254.248','admin','DDit#20020607!','demonlg')

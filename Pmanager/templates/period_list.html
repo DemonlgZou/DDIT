@@ -81,7 +81,7 @@
 					//direction: "rtl",
 					url: $path_base+"Pmanager/period_list.html/",
                     mtype: "post",
-					{#data: grid_data,#}
+					ajaxGridOptions:{headers: {"X-CSRFToken":'{{csrf_token}}'}},
 					datatype: "json",
 					height: 500,
 					colNames:[ '序号','项目编号','里程碑名','开始日期', '结束日期', '延迟天数','预期工作量','实际工作量','考评内容','创建时间','更新时间'],
