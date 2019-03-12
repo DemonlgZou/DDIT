@@ -1,12 +1,10 @@
-import pexpect,paramiko,logging,hashlib,datetime,time,telnetlib
+import pexpect,paramiko,logging,hashlib,datetime,time,telnetlib,threading
 from io import StringIO
 
 WIFI_MANAGER_IP = '192.168.96.253'
 WIFI_USER = 'admin'
 WIFI_PWD = 'merring@her0910'
-create_user = 'test'
-pwd = '11111'
-user_no = '1'
+
 
 
 def detele_wifi_user(create_user):
@@ -54,11 +52,11 @@ def create_wifi_user(create_user,pwd,user_no):
 		a.sendline(f'local-user {create_user} class network')
 		a.expect('New local user added.')
 		a.sendline(f'password simple {pwd}')
-		a.expect('WIFI-AC-luser-network-test')
+		a.expect(f'WIFI-AC-luser-network-{create_user}')
 		a.sendline(f'access-limit {user_no}')
-		a.expect('WIFI-AC-luser-network-test')
+		a.expect(f'WIFI-AC-luser-network-{create_user}')
 		a.sendline('service-type portal')
-		a.expect('WIFI-AC-luser-network-test')
+		a.expect(f'WIFI-AC-luser-network-{create_user}')
 		a.sendline('group ddit')
 		a.sendline('quit')
 		a.expect('WIFI-AC')
@@ -80,7 +78,7 @@ def create_wifi_user(create_user,pwd,user_no):
 
 
 
-def clean_wifi_user():
+def clean_wifi_user(create_user):
 	#强制提出用户信息
 	try:
 		a = pexpect.spawn('telnet %s' % WIFI_MANAGER_IP)
@@ -109,3 +107,4 @@ def clean_wifi_user():
 		return False
 #create_wifi_user(create_user,pwd,user_no)  #创建
 #detele_wifi_user(create_user)
+

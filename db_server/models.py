@@ -74,16 +74,17 @@ class host_info(models.Model):
     # 设备相信信息
     name = models.CharField(max_length=128, null=True, verbose_name='设备名称')
     type = models.CharField(max_length=128, null=True, verbose_name='设备类型')
-    CPU = models.CharField(max_length=128, null=True, verbose_name='CPU型号')
-    Memory = models.CharField(max_length=128, null=True, verbose_name='内存型号')
-    Bios = models.CharField(max_length=128, null=True, verbose_name='主板型号')
-    MAC = models.CharField(max_length=128, null=True, verbose_name='mac地址', unique=True)
-    SN = models.CharField(max_length=128, null=True, verbose_name='S/N')
-    NETWORK = models.CharField(max_length=128, null=True, verbose_name='网卡型号')
-    CDrom = models.CharField(max_length=128, null=True, verbose_name='光驱型号')
-    Video = models.CharField(max_length=128, null=True, verbose_name='显卡型号')
-    Sound = models.CharField(max_length=128, null=True, verbose_name='声卡型号')
-    Disk = models.CharField(max_length=128, null=True, verbose_name='硬盘')
+    # CPU = models.CharField(max_length=128, null=True, verbose_name='CPU型号')
+    # Memory = models.CharField(max_length=128, null=True, verbose_name='内存型号')
+    # Bios = models.CharField(max_length=128, null=True, verbose_name='主板型号')
+    # MAC = models.CharField(max_length=128, null=True, verbose_name='mac地址', unique=True)
+    # SN = models.CharField(max_length=128, null=True, verbose_name='S/N')
+    # NETWORK = models.CharField(max_length=128, null=True, verbose_name='网卡型号')
+    # CDrom = models.CharField(max_length=128, null=True, verbose_name='光驱型号')
+    # Video = models.CharField(max_length=128, null=True, verbose_name='显卡型号')
+    # Sound = models.CharField(max_length=128, null=True, verbose_name='声卡型号')
+    # Disk = models.CharField(max_length=128, null=True, verbose_name='硬盘')
+    info = models.TextField(verbose_name='设备详细信息')
     create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
     update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
 
@@ -207,6 +208,7 @@ class open_port(models.Model):
     start_time = models.DateField(verbose_name='开始日期',auto_created=True, auto_now_add=True)
     end_time = models.DateField(verbose_name='到期日期',null=True)
     on_line = models.CharField(verbose_name='永久生效',null=True,max_length=32)
+    port_stat = models.CharField(verbose_name='端口状态',max_length=32,null=True)
     create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
     update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
     interface = models.CharField(max_length=128,verbose_name='接口名')
@@ -289,7 +291,7 @@ class WIFI_OPEARTION_RECORD(models.Model):
     #info 代表具体操作命令
     action = models.CharField(max_length=128,verbose_name='动作内容')
     created_at = models.DateField(verbose_name='操作时间',null=True,auto_created=True,auto_now=True)
-    opearter = models.CharField(verbose_name='操作人员',max_length=128)
+    opeartor = models.CharField(verbose_name='操作人员',max_length=128)
     info = models.TextField(verbose_name='操作内容')
 
     class Meta:
@@ -299,11 +301,19 @@ class WIFI_USERS_LIST(models.Model):
     #user_type 1代表是正常用户,2代表是guest用户,
     # mode 1代表是长期用户,2代表是临时用户
     user = models.CharField(max_length=128,verbose_name='用户名',unique=True)
-    pwd = models.CharField(max_length=128,verbose_name='密码')
+    pwd = models.CharField(max_length=128,verbose_name='密码',null=True)
     mode = models.SmallIntegerField(verbose_name='授权类型')
     created_at = models.DateField(verbose_name='创建时间',null=True,auto_created=True,auto_now=True)
+    updated_at = models.DateField(verbose_name='更新时间',null=True,auto_created=True,auto_now=True)
     expired_at = models.DateField(verbose_name='到期时间',null=True)
-    user_type = models.SmallIntegerField(verbose_name='用户类型')
+    user_type = models.SmallIntegerField(verbose_name='账号类型')
+    started_at = models.DateField(verbose_name='授权开始时间',null=True)
+    dingding_id = models.CharField(verbose_name='钉钉审批单号',max_length=256,null=True)
+    proposer = models.CharField(verbose_name='申请人',max_length=128,null=True)
+    dept = models.CharField(verbose_name='申请部门',max_length=128,null=True)
+    operator = models.CharField(verbose_name='操作人',max_length=128,null=True)
+    max_num = models.SmallIntegerField(verbose_name='最大允许在线人数',default=1)
+    desc = models.TextField(verbose_name='备注信息',null=True)
     class Meta:
         db_table = 'ddit_wifi_user_list'
         

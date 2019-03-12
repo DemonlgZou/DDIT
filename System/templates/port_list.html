@@ -85,7 +85,7 @@
 					ajaxGridOptions:{headers: {"X-CSRFToken":'{{csrf_token}}'}},
 					datatype: "json",
 					height: 480,
-					colNames:['序号','策略名','内部IP地址', '协议类型', '内部端口号','外部端口号','启用接口','申请人','申请部门','生效日期','结束日期','永久','端口说明','创建时间','更新时间','关闭端口'],
+					colNames:['序号','策略名','内部IP地址', '协议类型', '内部端口号','外部端口号','启用接口','申请人','申请部门','生效日期','结束日期','状态','端口说明','创建时间','更新时间','关闭端口'],
 					colModel:[
 						{name:'id',index:'id', width:30, sorttype:"int", editable: true},
 						{name:'rule_name',index:'rule_name',width:90,search:false, editable:false, sorttype:"date",unformat: pickDate},

@@ -95,6 +95,8 @@ def supplier(request):
 
 @auth
 def in2out(request):
+    ###资产入库视图
+    #目前没完善入库功能
     if request.method == 'POST':
         #print(request.POST.get('name'))
         return HttpResponse(json.dumps({'status':'success'}), content_type="application/json")
@@ -295,6 +297,7 @@ def info_list(request,page):
     
     try:
          obj = models.Reserves.objects.get(id=int(page))
+         print(obj.name)
          data = {'status': 'success', 'code': 200, 'data': obj}
     except ValueError :
        data= {'status': 'success','code':404, 'data':'没有数据'}

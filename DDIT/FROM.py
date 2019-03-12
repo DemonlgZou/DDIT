@@ -45,3 +45,4 @@ class add_project(forms.Form):
         date_time = forms.CharField()
         service2in = forms.CharField()
         service2out = forms.CharField()
+        
