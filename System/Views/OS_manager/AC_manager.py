@@ -7,6 +7,7 @@ WIFI_PWD = 'merring@her0910'
 
 
 
+
 def detele_wifi_user(create_user):
 	#删除wifi用户信息
 	try:
@@ -76,6 +77,72 @@ def create_wifi_user(create_user,pwd,user_no):
 		return False
 
 
+def create_wifi_guest(create_user,pwd,start_time,end_time):
+	# 通过AC创建wifi访客账号的操作命令，create_user是申请人wifi账号，pwd是wifi的登陆密码，start_time是授权开始时间，end_time是授权结束时间）
+	try:
+		start_time = start_time.replace('-','/')
+		end_time = end_time.replace('-','/')
+		a = pexpect.spawn('telnet %s' % WIFI_MANAGER_IP)
+		a.expect('login:')
+		a.sendline(WIFI_USER)
+		a.expect('Password:')
+		a.sendline(WIFI_PWD)
+		a.expect('<WIFI-AC>')
+		a.sendline('sys')
+		a.expect('System View')
+		a.sendline(f'local-user {create_user} class network guest')
+		a.expect('New local user added.')
+		a.sendline(f'password simple {pwd}')
+		a.expect(f'WIFI-AC-luser-network*')
+		a.sendline('group ddit')
+		a.expect(f'WIFI-AC-luser-network*')
+		a.sendline(f'validity-datetime from {start_time} 00:00:00 to {end_time} 23:00:00')
+		a.expect(f'WIFI-AC-luser-network*')
+		a.sendline('quit')
+		a.expect('WIFI-AC')
+		a.sendline('save main.cfg')
+		a.expect('The current configuration will be saved to flash:/main.cfg. Continue?')
+		a.sendline('Y')
+		a.expect('flash:/main.cfg exists, overwrite?')
+		a.sendline('Y')
+		a.expect('Configuration is saved to device successfully.')
+		a.sendline('save backup.cfg')
+		a.expect('The current configuration will be saved to flash:/backup.cfg. Continue?')
+		a.expect('flash:/backup.cfg exists, overwrite?')
+		a.sendline('Y')
+		a.expect('WIFI-AC')
+		return True
+	except Exception:
+		return False
+
+
+def detele_wifi_guest(create_user):
+	#删除wifi用户信息
+	try:
+		a = pexpect.spawn('telnet %s' % WIFI_MANAGER_IP)
+		a.expect('login:')
+		a.sendline(WIFI_USER)
+		a.expect('Password:')
+		a.sendline(WIFI_PWD)
+		a.expect('<WIFI-AC>')
+		a.sendline('sys')
+		a.expect('System View')
+		a.sendline(f'undo local-user {create_user} class network guest')
+		a.expect('WIFI-AC')
+		a.sendline('save main.cfg')
+		a.expect('The current configuration will be saved to flash:/main.cfg. Continue?')
+		a.sendline('Y')
+		a.expect('flash:/main.cfg exists, overwrite?')
+		a.sendline('Y')
+		a.expect('Configuration is saved to device successfully.')
+		a.sendline('save backup.cfg')
+		a.expect('The current configuration will be saved to flash:/backup.cfg. Continue?')
+		a.expect('flash:/backup.cfg exists, overwrite?')
+		a.sendline('Y')
+		a.expect('WIFI-AC')
+		return True
+	except Exception:
+		return False
 
 
 def clean_wifi_user(create_user):
@@ -105,6 +172,9 @@ def clean_wifi_user(create_user):
 		return True
 	except Exception:
 		return False
-#create_wifi_user(create_user,pwd,user_no)  #创建
+	
+	
+	
+#create_wifi_guest(create_user,pwd,start_time,end_time)  #创建
 #detele_wifi_user(create_user)
 

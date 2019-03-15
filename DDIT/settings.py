@@ -23,6 +23,7 @@ SECRET_KEY = '02onl46-tfa*&7m3$7j6386td++(#px+mj--9agb2vkrn!zaps'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+#DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -134,7 +135,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-#STATIC_ROOT = os.path.join(BASE_DIR,'/static/')
+STATIC_ROOT = os.path.join(BASE_DIR,'/static/')
 STATICFILES_DIRS = [os.path.join(BASE_DIR,r'static',),]
 
 

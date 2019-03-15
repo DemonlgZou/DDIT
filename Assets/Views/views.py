@@ -98,39 +98,86 @@ def in2out(request):
     ###资产入库视图
     #目前没完善入库功能
     if request.method == 'POST':
-        #print(request.POST.get('name'))
-        return HttpResponse(json.dumps({'status':'success'}), content_type="application/json")
+        #print(request.POST)
+        if request.POST.get('sn') == '':
+            return HttpResponse(json.dumps({'status':'sn码不能为空！'}), content_type="application/json")
+        elif request.POST.get('name') == '':
+            return HttpResponse(json.dumps({'status': '资产名不能为空！'}), content_type="application/json")
+        elif request.POST.get('price') == '':
+            return HttpResponse(json.dumps({'status': '金额不能为空！'}), content_type="application/json")
+        name = request.POST.get('name')
+        Type = request.POST.get('Type')
+        price = request.POST.get('price')
+        type = request.POST.get('type')
+        sn = request.POST.get('sn')
+        company = request.POST.get('company')
+        com_obj = models.Company_info.objects.get(name=company).contacts
+        info = request.POST.get('info')
+        year = datetime.datetime.now().date()
+        half_year = str(year).split('-')
+        year_no = half_year[0][-2:]
+        manger_user = request.POST.get('manger_user') if request.POST.get('manger_user') else 'IT管理人员'
+        obj = models.Dictionary.objects.get(arr1=type)
+        #print(obj.arr1,obj.arr2,obj.arr3,obj.arr4,obj.id)
+        add_no = int(obj.arr3)+1
+        if len(str(add_no))>= 4:
+            no = str(add_no)
+        elif len(str(add_no)) == 3:
+            no = '0'+str(add_no)
+        elif len(str(add_no)) == 2:
+            no = '00' + str(add_no)
+        elif len(str(add_no)) == 1:
+            no = '000' + str(add_no)
+        asset_id  = f'{year_no}YIT{type}{no}'
+        host_obj = models.host_info.objects.create(**{'name':name,'type':obj.arr2,'info':info,'sn':request.POST.get('sn')})
+        create_data= {'name':name,'Type':Type,'price':price,
+                                          'asset_No':asset_id,'company':company,'manger_user':manger_user
+                                          ,'status':'库存','info':host_obj,'contacts':com_obj}
+        models.Reserves.objects.create(**create_data)
+        #print(asset_id,no)
+        obj.arr3 = no
+        obj.save()
+        models.Assets_log.objects.create(action=1, asset_no=asset_id,
+                                         asset_status='库存',
+                                         operator=request.session.get('user'), desc=f'新增数据参数如下{create_data}')
+        return HttpResponse(json.dumps({'status': 'ok！'}), content_type="application/json")
     elif request.method == 'GET':
         obj = models.Company_info.objects.all().order_by('id')
-        tmp = {'info':obj}
+        type_info = models.Dictionary.objects.filter(arr4='设备类型').all().order_by('id')
+        tmp = {'info':obj,'type':type_info}
         tmp.update(menu_list(request))
         return  render(request, 'stock_inquiry.html',tmp)
 
 
-
+@auth
+def company_list(request):
+    if request.is_ajax():
+        if request.method =='GET':
+            pass
 
 @auth
 def assets(request):
     #固定资产视图
     if request.method == 'POST':
         if request.POST.get('oper', None) == 'edit':
-            models.Reserves.objects.filter(id=request.POST.get('id')).update(
-            name=request.POST.get('name'),
-            asset_No= request.POST.get('no'),
-            Type= request.POST.get('type'),
-            price= request.POST.get('price'),
-            status= request.POST.get('status'),
-            company= request.POST.get('company'),
-            contacts= request.POST.get('contacts'),
-            manger_user = request.POST.get('manger_user'),
-            finance_id=request.POST.get('finance_id')
-            )
-
+            info= {'name':request.POST.get('name'),
+            'asset_No':request.POST.get('no'),
+            'Type':request.POST.get('type'),
+            'price':request.POST.get('price'),
+            'status': request.POST.get('status'),
+            #company= request.POST.get('company'),
+            #contacts= request.POST.get('contacts'),
+            'manger_user' : request.POST.get('manger_user'),
+            'finance_id':request.POST.get('finance_id')}
+            models.Reserves.objects.filter(id=request.POST.get('id')).update(**info)
+        
+            models.Assets_log.objects.create(action=2,asset_no=request.POST.get('no'),asset_status=request.POST.get('status'),
+                                             operator=request.session.get('user'),desc=f'更新数据参数如下{info}')
             return HttpResponse(json.dumps({'Status': 'success', }))
 
 
         elif request.POST.get('_search', None) == 'false':
-            obj = models.Reserves.objects.filter(Type='固定资产').all()
+            obj = models.Reserves.objects.filter(Type='固定资产').all().order_by('id')
             res = Paging.page_list(request, obj)
             rows = []
             for i in res.get('data'):
@@ -213,8 +260,6 @@ def consumable(request):
                                                                                    type=request.POST.get('type'))
             obj.save()
             return HttpResponse(json.dumps({'Status': 'success', }))
-
-
         elif request.POST.get('_search', None) == 'false':
             obj = models.Reserves.objects.filter(Type='低值易耗品').all()
             res = Paging.page_list(request, obj)
@@ -287,7 +332,38 @@ def consumable(request):
 
 @auth
 def select(request):
-    return  render(request, 'stock_inquiry.html',menu_list(request))
+    if request.is_ajax():
+        if request.method == 'POST':
+              if request.POST.get('_search', None) == 'false':
+                obj = models.Assets_log.objects.all().order_by('id')
+                res = Paging.page_list(request, obj)
+                rows = []
+                for i in res.get('data'):
+                    if i.action == 1:
+                        action = '新增'
+                    elif i.action == 2:
+                        action = '更新'
+                    elif i.action == 3:
+                        action = '删除'
+                    else:
+                        action = '未知错误'
+                    tmp = {}
+                    tmp.update({'id': i.id,
+                                'action':action,
+                                'asset_no': i.asset_no,
+                                'asset_status': i.asset_status,
+                                'operator': i.operator,
+                                'desc': i.desc,
+                                'create_at': i.create_at.strftime('%Y-%m-%dT%H:%M:%S'),
+                                }
+                               )
+                    rows.append(tmp)
+                data = {'page': res.get('page'),
+                        'total': res.get('last'),
+                        'records': res.get('records'), 'rows': rows}
+                return HttpResponse(json.dumps(data), content_type="application/json")
+            
+    return  render(request, 'asset_log.html',menu_list(request))
 
 
 
@@ -297,7 +373,6 @@ def info_list(request,page):
     
     try:
          obj = models.Reserves.objects.get(id=int(page))
-         print(obj.name)
          data = {'status': 'success', 'code': 200, 'data': obj}
     except ValueError :
        data= {'status': 'success','code':404, 'data':'没有数据'}
@@ -314,3 +389,14 @@ def stock_inquiry(request):
 
 
 
+@auth
+def add_type(request):
+    
+    if request.method == 'POST':
+        info = {'arr1':request.POST.get('arr1'),'arr2':request.POST.get('arr2'),'arr3':'0000','arr4':'设备类型'}
+        try :
+            models.Dictionary.objects.create(**info)
+            return HttpResponse(json.dumps({'status':'ok'}), content_type="application/json")
+        except Exception as e:
+            return HttpResponse(json.dumps({'error':f'操作出错{e}'}), content_type="application/json")
+    return render(request,'add_type.html',menu_list(request))

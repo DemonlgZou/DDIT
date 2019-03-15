@@ -3,7 +3,7 @@ from db_server import models
 from DDIT import Paging,FROM,imortdb_data
 from DDIT.ddit_plugins import auth, menu_list
 from System.Views.OS_manager.firewall_manager import open_port,close_port
-from System.Views.OS_manager.AC_manager import detele_wifi_user,create_wifi_user,clean_wifi_user
+from System.Views.OS_manager.AC_manager import *
 from System.Views.OS_manager.vm_manager import VmManger
 import json, datetime,uuid,threading
 from DDIT.ddit_plugins import auth, menu_list, search_rules, Fliter_1, Fliter_2  #导入插件
@@ -54,6 +54,7 @@ def firewall_close_port(request):
 				                                      opeater=request.session.get('user'), type='关闭外网访问',
 				                                      info='nat server %s ' % (
 				                                      rule_name))
+				
 				return HttpResponse(json.dumps({'ok': '端口已关闭'}), content_type="application/json")
 			else:
 				return HttpResponse(json.dumps({'ok': '操作异常'}), content_type="application/json")
@@ -286,7 +287,7 @@ def vm_manager(request):
 		        'total': res.get('last'),
 		        'records': res.get('records'), 'rows': rows}
 		return HttpResponse(json.dumps(data), content_type="application/json")
-	return render(request,'vm_list.html',menu_list(request))
+	return render(request,'wifi_log.html',menu_list(request))
 
 
 
@@ -306,18 +307,29 @@ def WIFI_Thread(obj_name,obj_agrs,wifi_user_agrs,username):
 	##obj_name 是操作对应的函数名，obj_agrs是对应函数需要传入的参数列表，wifi_user_agrs是数据库需要写入的参数，username是操作人员的名字
 	tmp = threading.Thread(target=obj_name,args=obj_agrs)
 	tmp.start()
-	if obj_name == create_wifi_user:
-		expired_at = wifi_user_agrs.get('expired_at') if wifi_user_agrs.get('expired_at') != '' else wifi_user_agrs.get(
-			'started_at')
-		max_num = wifi_user_agrs.get('max_num') if wifi_user_agrs.get('max_num') is wifi_user_agrs.get('max_num').isalnum else '1'
+	expired_at = wifi_user_agrs.get('expired_at') if wifi_user_agrs.get('expired_at') != '' else wifi_user_agrs.get(
+		'started_at')
+	max_num = wifi_user_agrs.get('max_num') if wifi_user_agrs.get('max_num') != '' else 1
 	
-		info = {'proposer':wifi_user_agrs.get('proposer'),'dingding_id':wifi_user_agrs.get('dingding_id'),
-		        'dept':wifi_user_agrs.get('dept'),'user':wifi_user_agrs.get('user'),
-		        'pwd':wifi_user_agrs.get('pwd'),'user_type':wifi_user_agrs.get('user_type'),
-		        'mode':wifi_user_agrs.get('mode'),'max_num':max_num,
-		        'started_at':datetime.datetime.strptime(wifi_user_agrs.get('started_at'),'%Y-%m-%d'),
-		        'expired_at':datetime.datetime.strptime(expired_at,'%Y-%m-%d'),
-		        'desc':wifi_user_agrs.get('desc')}
+	if obj_name == create_wifi_user:
+		
+		
+		if wifi_user_agrs.get('mode') != '1':
+			info = {'proposer':wifi_user_agrs.get('proposer'),'dingding_id':wifi_user_agrs.get('dingding_id'),
+			        'dept':wifi_user_agrs.get('dept'),'user':wifi_user_agrs.get('user'),
+			        'pwd':wifi_user_agrs.get('pwd'),'user_type':int(wifi_user_agrs.get('user_type')),
+			        'mode':int(wifi_user_agrs.get('mode')),'max_num':max_num,
+			        'started_at':datetime.datetime.strptime(wifi_user_agrs.get('started_at'),'%Y-%m-%d'),
+			        'expired_at':datetime.datetime.strptime(expired_at,'%Y-%m-%d'),
+			        'desc':wifi_user_agrs.get('desc'),'operator':username}
+			
+		else:
+			info = {'proposer':wifi_user_agrs.get('proposer'),'dingding_id':wifi_user_agrs.get('dingding_id'),
+			        'dept':wifi_user_agrs.get('dept'),'user':wifi_user_agrs.get('user'),
+			        'pwd':wifi_user_agrs.get('pwd'),'user_type':int(wifi_user_agrs.get('user_type')),
+			        'mode':int(wifi_user_agrs.get('mode')),'max_num':max_num,
+			        'started_at':datetime.datetime.strptime(wifi_user_agrs.get('started_at'),'%Y-%m-%d'),
+			        'desc':wifi_user_agrs.get('desc'),'operator':username}
 		models.WIFI_USERS_LIST.objects.create(**info)
 		models.WIFI_OPEARTION_RECORD.objects.create(action='创建用户',opeartor=username,info=obj_agrs)
 	elif obj_name == detele_wifi_user:
@@ -327,8 +339,16 @@ def WIFI_Thread(obj_name,obj_agrs,wifi_user_agrs,username):
 	elif obj_name == clean_wifi_user:
 		models.WIFI_OPEARTION_RECORD.objects.create(action='强制下线', opeartor=username, info=obj_agrs)
 
-
-
+	elif obj_name == create_wifi_guest:
+		info = {'proposer': wifi_user_agrs.get('proposer'), 'dingding_id': wifi_user_agrs.get('dingding_id'),
+		        'dept': wifi_user_agrs.get('dept'), 'user': wifi_user_agrs.get('user'),
+		        'pwd': wifi_user_agrs.get('pwd'), 'user_type': int(wifi_user_agrs.get('user_type')),
+		        'mode': int(wifi_user_agrs.get('mode')), 'max_num': max_num,
+		        'started_at': datetime.datetime.strptime(wifi_user_agrs.get('started_at'), '%Y-%m-%d'),
+		        'desc': wifi_user_agrs.get('desc'), 'operator': username,expired_at:expired_at}
+		models.WIFI_USERS_LIST.objects.create(**info)
+		models.WIFI_OPEARTION_RECORD.objects.create(action='创建用户', opeartor=username, info=obj_agrs)
+	
 @auth
 def ADD_WIFI_USER(request):
 	#'proposer'申请人
@@ -346,7 +366,6 @@ def ADD_WIFI_USER(request):
 	if request.method == 'POST':
 		max_num = request.POST.get('max_num') if  request.POST.get('max_num') is request.POST.get('max_num').isalnum else '1'
 		if request.POST.get('proposer') == '' :
-			
 			return HttpResponse(json.dumps({'ok': '申请人不能为空'}), content_type="application/json")
 		elif request.POST.get('dingding_id') == '':
 			return HttpResponse(json.dumps({'ok': '审批单号不能为空'}), content_type="application/json")
@@ -366,12 +385,16 @@ def ADD_WIFI_USER(request):
 				expired_at = request.POST.get('expired_at') if request.POST.get('expired_at') != '' else request.POST.get('started_at')
 				if datetime.datetime.strptime(expired_at, '%Y-%m-%d') < start :
 					return HttpResponse(json.dumps({'ok': '授权结束时间不能小于开始时间'}), content_type="application/json")
-				if request.POST.get('user_type') == '1':
-					WIFI_Thread(create_wifi_user,(request.POST.get('user'),request.POST.get('pwd'),request.POST.get('max_num'),),request.POST,request.session['user'])
-					return HttpResponse(json.dumps({'ok': '正在创建无线用户，请稍后！！！'}), content_type="application/json")
+				if request.POST.get('user_type') == '1' :
+						WIFI_Thread(create_wifi_user,
+						            (request.POST.get('user'), request.POST.get('pwd'), request.POST.get('max_num'),),
+						            request.POST, request.session.get('user'))
+						return HttpResponse(json.dumps({'ok': '正在创建无线用户，请稍后！！！'}), content_type="application/json")
+					
 				else:
-					return HttpResponse(json.dumps({'ok': '暂不支持访客模式！！！'}), content_type="application/json")
-	
+						WIFI_Thread(create_wifi_guest,(request.POST.get('user'), request.POST.get('pwd'),request.POST.get('started_at'),expired_at,),request.POST, request.session.get('user'))
+						#return HttpResponse(json.dumps({'ok': '暂不支持访客模式！！！'}), content_type="application/json")
+						return HttpResponse(json.dumps({'ok': '正在创建无线用户，请稍后！！！'}), content_type="application/json")
 	return render(request,'ADD_WIFI_USER.html',menu_list(request))
 	
 
@@ -490,3 +513,25 @@ def CLEAN_WIFI_USER(request):
 def OPEN_SW_PORT(request):
 	return render(request,'OPEN_SW_PORT.html',menu_list(request))
 	
+	
+	
+@auth
+def wifi_log(request):
+	#wifi用户管理操作记录
+	if request.is_ajax():
+		if request.method == 'POST':
+			if request.POST.get('_search',None) == 'false':
+				obj = models.WIFI_OPEARTION_RECORD.objects.all().order_by('id')
+				res = Paging.page_list(request, obj)
+				rows = []
+				for i in res.get('data'):
+					tmp = {}
+					
+					tmp.update({'id': i.id, 'action': i.action, 'opeartor': i.opeartor,
+					            'info': i.info,'created_at': (i.created_at).strftime('%Y-%m-%dT%H:%M:%S')})
+					rows.append(tmp)
+				data = {'page': res.get('page'),
+				        'total': res.get('last'),
+				        'records': res.get('records'), 'rows': rows}
+				return HttpResponse(json.dumps(data), content_type="application/json")
+	return render(request,'wifi_log.html',menu_list(request))

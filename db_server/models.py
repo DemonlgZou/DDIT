@@ -39,10 +39,12 @@ class FAssets(models.Model):
 
 
 class Dictionary(models.Model):
-    arr1 = models.CharField(max_length=4, default='DDIT')
-    arr2 = models.CharField(max_length=4, unique=True)
-    arr3 = models.CharField(max_length=6, null=True)
-    cname = models.CharField(max_length=128)
+    arr1 = models.CharField(max_length=128, unique=True,null=True)#设备类型缩写
+    arr2 = models.CharField(max_length=10, null=True)
+    arr3 = models.CharField(max_length=128,null=True)
+    arr4 = models.CharField(max_length=128,null=True)
+    # arr3 = models.CharField(max_length=6, default='000')
+    # cname = models.CharField(max_length=128)
     
     class Meta:
         db_table = 'ddit_dict'
@@ -72,27 +74,23 @@ class Reserves(models.Model):
 
 class host_info(models.Model):
     # 设备相信信息
+    sn = models.CharField(max_length=128, null=True, verbose_name='设备')
     name = models.CharField(max_length=128, null=True, verbose_name='设备名称')
     type = models.CharField(max_length=128, null=True, verbose_name='设备类型')
-    # CPU = models.CharField(max_length=128, null=True, verbose_name='CPU型号')
-    # Memory = models.CharField(max_length=128, null=True, verbose_name='内存型号')
-    # Bios = models.CharField(max_length=128, null=True, verbose_name='主板型号')
-    # MAC = models.CharField(max_length=128, null=True, verbose_name='mac地址', unique=True)
-    # SN = models.CharField(max_length=128, null=True, verbose_name='S/N')
-    # NETWORK = models.CharField(max_length=128, null=True, verbose_name='网卡型号')
-    # CDrom = models.CharField(max_length=128, null=True, verbose_name='光驱型号')
-    # Video = models.CharField(max_length=128, null=True, verbose_name='显卡型号')
-    # Sound = models.CharField(max_length=128, null=True, verbose_name='声卡型号')
-    # Disk = models.CharField(max_length=128, null=True, verbose_name='硬盘')
     info = models.TextField(verbose_name='设备详细信息')
     create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
     update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
-
+    
 
 class Assets_log(models.Model):
     '''资产管理操作记录'''
-    pass
-    
+    #action ：1、新增；2、修改；3、删除
+    action = models.SmallIntegerField()
+    operator = models.CharField(max_length=64,verbose_name='操作者',null=True)
+    asset_no = models.CharField(max_length=256,null=True)
+    asset_status = models.CharField(max_length=128,null=True)
+    desc = models.CharField(max_length=256,null=True)
+    create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
     class Meta:
         db_table = 'ddit_assets_log'
 
@@ -207,8 +205,8 @@ class open_port(models.Model):
     outside_port = models.CharField(verbose_name='外网端口号',max_length=32)
     start_time = models.DateField(verbose_name='开始日期',auto_created=True, auto_now_add=True)
     end_time = models.DateField(verbose_name='到期日期',null=True)
-    on_line = models.CharField(verbose_name='永久生效',null=True,max_length=32)
-    port_stat = models.CharField(verbose_name='端口状态',max_length=32,null=True)
+    on_line = models.CharField(verbose_name='端口状态',null=True,max_length=32)
+   
     create_at = models.DateTimeField(verbose_name='创建时间', auto_created=True, auto_now_add=True)
     update_at = models.DateTimeField(verbose_name='更新时间', auto_created=True, auto_now=True)
     interface = models.CharField(max_length=128,verbose_name='接口名')
@@ -296,6 +294,9 @@ class WIFI_OPEARTION_RECORD(models.Model):
 
     class Meta:
         db_table = 'ddit_wifi_opeartion_record'
+
+
+
         
 class WIFI_USERS_LIST(models.Model):
     #user_type 1代表是正常用户,2代表是guest用户,

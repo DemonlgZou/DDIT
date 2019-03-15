@@ -91,8 +91,12 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 资产类型 </label>
 
-										<div class="col-sm-9">
-											<input type="text"  name='Type' id="form-field-2" placeholder="主机名" class="col-xs-10 col-sm-5" />
+										<div class="col-sm-9" >
+											<select  id="form-field-2">
+                                                <option selected="selected" value="固定资产">固定资产</option>
+                                                <option value="低值易耗品">低值易耗品</option>
+                                                <option value="其他">其他</option>
+                                            </select>
 										</div>
 									</div>
 									<div class="space-4"></div>
@@ -101,19 +105,26 @@
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-3"> 资产价格 </label>
 
 										<div class="col-sm-9">
-											<input type="text" name="price" id="form-field-3" placeholder="资产价格" class="col-xs-10 col-sm-5" />
+											<input type="int" name="price" id="form-field-3" placeholder="资产价格" class="col-xs-10 col-sm-5" />
 										</div>
 									</div>
 									<div class="space-4"></div>
+                                    <div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-3"> 管理人 </label>
 
+										<div class="col-sm-9">
+											<input type="text" name="price" id="form-field-8" placeholder="管理人" class="col-xs-10 col-sm-5" />
+										</div>
+									</div>
+									<div class="space-4"></div>
                                     <div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-4"> 设备类型 </label>
 
-										<div class="col-sm-9">
-                                        <select>
-                                                <option value="固定资产">固定资产</option>
-                                                <option value="低值易耗品">低值易耗品</option>
-                                                <option value="其他">其他</option>
+										<div class="col-sm-9" >
+                                        <select id="form-field-4">
+                                                 {% for i in type %}
+                                                <option value= {{i.arr1 }} > {{i.arr2}}</option>
+                                                {% endfor %}
                                             </select>
 										</div>
 									</div>
@@ -134,7 +145,8 @@
 										<div class="col-sm-9">
                                             <select  id="form-field-6"  class="col-xs-10 col-sm-5" >
                                              {% for i in info %}
-                                                <option value= {{i.name }} }}> {{i.name}}</option>
+
+                                                <option value= {{i.name }} > {{i.name}}</option>
                                                 {% endfor %}
                                             </select>
 										</div>
@@ -145,7 +157,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-15"> 设备详细信息 </label>
 
 										<div class="col-sm-9">
-											<textarea name="network" id="form-field-15" placeholder="设备详细信息" class="col-xs-10 col-sm-5" cols="2"   rows="6"   style="OVERFLOW:   hidden">
+											<textarea name="network" id="form-field-7" placeholder="设备详细信息" class="col-xs-10 col-sm-5" cols="2"   rows="6"   style="OVERFLOW:   hidden">
                                             </textarea>
 										</div>
 									</div>
@@ -514,17 +526,10 @@
             var type = $('#form-field-4').val();
             var sn = $('#form-field-5').val();
             var company = $('#form-field-6').val();
-            var cpu = $('#form-field-7').val();
-            var memory = $('#form-field-8').val();
-            var disk = $('#form-field-9').val();
-            var bios = $('#form-field-10').val();
-            var mac = $('#form-field-11').val();
-            var video = $('#form-field-12').val();
-            var sound = $('#form-field-13').val();
-            var cdrom = $('#form-field-14').val();
-            var network = $('#form-field-15').val();
-            data_info = {'name':name,'Type':Type,'price':price,'type':type,'sn':sn,'company':company,'cpu':cpu,
-            'memory':memory,'disk':disk,'bios':bios,'mac':mac,'video':video,'sound':sound,'cdrom':cdrom,'network':network} ;
+            var info = $('#form-field-7').val();
+            var manager = $('#form-field-8').val();
+            data_info = {'name':name,'Type':Type,'price':price,'type':type,'sn':sn,'company':company,'info':info,'manager':manager
+          } ;
             $.ajax(
                 {
                  type:'POST',
@@ -534,7 +539,7 @@
                  headers:{"X-CSRFToken":'{{csrf_token}}'},
                  success: function (data) {
                      if (data.status){
-                         alert('入库成功！')
+                         alert(data.status)
                      }
                      else{alert('参数错误！')}
 
