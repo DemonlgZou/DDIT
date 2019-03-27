@@ -1,5 +1,6 @@
 from django.shortcuts import  redirect,render
 from db_server.models import *
+from django.utils import timezone
 def auth(func):
 	# 负责做用户登陆认证的方法
 	def inner(request, *args, **kwargs):
@@ -23,6 +24,7 @@ def menu_list(request):
         menu = Role2Menu.objects.filter(rid=user_id).all().order_by('id')
         list1 = Menu.objects.filter(menu__in=menu).all().order_by('id')
         for i in menu:
+            # print(i.menu.id)
             i.menu.id
             tmp.append(i.menu.id)
         list2 = Menu.objects.filter(top_no__in=tmp).all().order_by('id')
@@ -34,7 +36,7 @@ def menu_list(request):
 def Fliter_1(request, Mod):
     # 等于 不等于 或者 属于 不属于 匹配查询
     if request.POST.get('searchOper') == 'eq':
-        print(request.POST.get('searchField'),request.POST.get('searchString'))
+        #print(request.POST.get('searchField'),request.POST.get('searchString'))
         obj = Mod.filter(
             **{request.POST.get('searchField'): request.POST.get('searchString')}).all().order_by('id')
     elif request.POST.get('searchOper') == 'ne':
@@ -73,5 +75,19 @@ def Fliter_2(request,Mod):
         obj = Mod.filter(
             id__gte=request.POST.get('searchString')).all().order_by('id')
     return obj
+
+
+import datetime
+
+def get_current_week():
+    #获取当前周的开始时间和结束时间
+    monday, sunday = timezone.datetime.today(), timezone.datetime.today()
+    one_day = datetime.timedelta(days=1)
+    while monday.weekday() != 0:
+        monday -= one_day
+    while sunday.weekday() != 6:
+        sunday += one_day
+
+    return monday, sunday
 
 search_rules = {'rules1':['eq','ne','in','ni'],'rules2':['lt','le','gt','ge'],'rules3':['bw','bn','ew','en','cn','nc']}

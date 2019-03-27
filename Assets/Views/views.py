@@ -362,7 +362,8 @@ def select(request):
                         'total': res.get('last'),
                         'records': res.get('records'), 'rows': rows}
                 return HttpResponse(json.dumps(data), content_type="application/json")
-            
+              elif  request.POST.get('_search', None) == 'true':
+                  pass
     return  render(request, 'asset_log.html',menu_list(request))
 
 

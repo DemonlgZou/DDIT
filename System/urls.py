@@ -22,4 +22,5 @@ urlpatterns = [
     url('wifi_log.html/',views.wifi_log,name='WIFI_USER_LOGS'),
     url('OPEN_SW_PORT.html/',views.OPEN_SW_PORT,name='OPEN_SW_PORT'),
     url('vm_manager/list.html/',views.vm_manager,name='OPEN_SW_PORT_LOGS'),
+    url('wifi_changepassword.html/',views.wifi_changepassword),
 ]

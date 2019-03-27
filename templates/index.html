@@ -50,7 +50,7 @@
 
 											<div class="infobox-data">
 												<span class="infobox-data-number">新增设备(周)</span>
-												<div class="infobox-content">0台</div>
+												<div class="infobox-content">{{ new_device }}台</div>
 											</div>
 {#											<div class="stat stat-success"></div>#}
 										</div>
@@ -62,7 +62,7 @@
 
 											<div class="infobox-data">
 												<span class="infobox-data-number">资产总数</span>
-												<div class="infobox-content">个</div>
+												<div class="infobox-content">{{ asset_total }}个</div>
 											</div>
 
 
@@ -75,7 +75,7 @@
 
 											<div class="infobox-data">
 												<span class="infobox-data-number">下线设备(周)</span>
-												<div class="infobox-content">0台</div>
+												<div class="infobox-content">{{ Scrap }}台</div>
 											</div>
 {#											<div class="stat stat-important"></div>#}
 										</div>
@@ -87,7 +87,7 @@
 
 											<div class="infobox-data">
 												<span class="infobox-data-number">出库数量</span>
-												<div class="infobox-content">个</div>
+												<div class="infobox-content">{{ out2user }}个</div>
 											</div>
 										</div>
 
@@ -111,7 +111,7 @@
 
 											<div class="infobox-data">
 												<span class="infobox-data-number">新增资产(周)</span>
-												<div class="infobox-content">条数</div>
+												<div class="infobox-content">{{ add_asset }}条数</div>
 											</div>
 										</div>
 
@@ -129,20 +129,20 @@
 
 											<div class="infobox-data infobox-green">
 												<span class="infobox-data-number">开通端口个(周)</span>
-												<div class="infobox-content">个</div>
+												<div class="infobox-content">{{ open_port }}个</div>
 											</div>
 										</div>
                                         <div class="infobox infobox-green  ">
 											<div class="infobox-data">
 												<span class="infobox-data-number">创建服务器(周)</span>
-												<div class="infobox-content">个</div>
+												<div class="infobox-content">{{ create_vm }}个</div>
 											</div>
 										</div>
 
                                          <div class="infobox infobox-blue2  ">
 											<div class="infobox-data">
 												<span class="infobox-data-number">在线主机</span>
-												<div class="infobox-content">台</div>
+												<div class="infobox-content">{{ on_line2host }}台</div>
 											</div>
 										</div>
 
@@ -150,7 +150,7 @@
                                          <div class="infobox infobox-red  ">
 											<div class="infobox-data">
 												<span class="infobox-data-number">离线主机</span>
-												<div class="infobox-content">台</div>
+												<div class="infobox-content">{{ off_line2host }}台</div>
 											</div>
 										</div>
 										<div class="space-6"></div>

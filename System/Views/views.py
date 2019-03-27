@@ -287,7 +287,7 @@ def vm_manager(request):
 		        'total': res.get('last'),
 		        'records': res.get('records'), 'rows': rows}
 		return HttpResponse(json.dumps(data), content_type="application/json")
-	return render(request,'wifi_log.html',menu_list(request))
+	return render(request,'vm_list.html',menu_list(request))
 
 
 
@@ -307,14 +307,14 @@ def WIFI_Thread(obj_name,obj_agrs,wifi_user_agrs,username):
 	##obj_name 是操作对应的函数名，obj_agrs是对应函数需要传入的参数列表，wifi_user_agrs是数据库需要写入的参数，username是操作人员的名字
 	tmp = threading.Thread(target=obj_name,args=obj_agrs)
 	tmp.start()
-	expired_at = wifi_user_agrs.get('expired_at') if wifi_user_agrs.get('expired_at') != '' else wifi_user_agrs.get(
-		'started_at')
-	max_num = wifi_user_agrs.get('max_num') if wifi_user_agrs.get('max_num') != '' else 1
 	
 	if obj_name == create_wifi_user:
-		
-		
+		expired_at = wifi_user_agrs.get('expired_at') if wifi_user_agrs.get(
+			'expired_at') != '' else wifi_user_agrs.get(
+			'started_at')
+		max_num = wifi_user_agrs.get('max_num') if wifi_user_agrs.get('max_num') != '' else 1
 		if wifi_user_agrs.get('mode') != '1':
+			
 			info = {'proposer':wifi_user_agrs.get('proposer'),'dingding_id':wifi_user_agrs.get('dingding_id'),
 			        'dept':wifi_user_agrs.get('dept'),'user':wifi_user_agrs.get('user'),
 			        'pwd':wifi_user_agrs.get('pwd'),'user_type':int(wifi_user_agrs.get('user_type')),
@@ -332,23 +332,31 @@ def WIFI_Thread(obj_name,obj_agrs,wifi_user_agrs,username):
 			        'desc':wifi_user_agrs.get('desc'),'operator':username}
 		models.WIFI_USERS_LIST.objects.create(**info)
 		models.WIFI_OPEARTION_RECORD.objects.create(action='创建用户',opeartor=username,info=obj_agrs)
+	
 	elif obj_name == detele_wifi_user:
 		wifi_obj = models.WIFI_USERS_LIST.objects.get(user=wifi_user_agrs)
 		models.WIFI_USERS_LIST.objects.get(user=wifi_obj.user).delete()
 		models.WIFI_OPEARTION_RECORD.objects.create(action='删除用户', opeartor=username, info=obj_agrs)
+	
 	elif obj_name == clean_wifi_user:
 		models.WIFI_OPEARTION_RECORD.objects.create(action='强制下线', opeartor=username, info=obj_agrs)
 
 	elif obj_name == create_wifi_guest:
+		expired_at = wifi_user_agrs.get('expired_at') if wifi_user_agrs.get(
+			'expired_at') != '' else wifi_user_agrs.get(
+			'started_at')
 		info = {'proposer': wifi_user_agrs.get('proposer'), 'dingding_id': wifi_user_agrs.get('dingding_id'),
 		        'dept': wifi_user_agrs.get('dept'), 'user': wifi_user_agrs.get('user'),
 		        'pwd': wifi_user_agrs.get('pwd'), 'user_type': int(wifi_user_agrs.get('user_type')),
-		        'mode': int(wifi_user_agrs.get('mode')), 'max_num': max_num,
+		        'mode': int(wifi_user_agrs.get('mode')),
 		        'started_at': datetime.datetime.strptime(wifi_user_agrs.get('started_at'), '%Y-%m-%d'),
 		        'desc': wifi_user_agrs.get('desc'), 'operator': username,expired_at:expired_at}
 		models.WIFI_USERS_LIST.objects.create(**info)
 		models.WIFI_OPEARTION_RECORD.objects.create(action='创建用户', opeartor=username, info=obj_agrs)
-	
+	elif obj_name == change_wifi_pwd:
+		 models.WIFI_OPEARTION_RECORD.objects.create(action='重置用户密码',opeartor=username,info=obj_agrs)
+
+
 @auth
 def ADD_WIFI_USER(request):
 	#'proposer'申请人
@@ -496,17 +504,28 @@ def CLEAN_WIFI_USER(request):
    #强制用户下线
 	if request.is_ajax():
 		if request.method == 'POST':
+			print(request.POST)
+			wifi_user = models.WIFI_USERS_LIST.objects.get(id=request.POST.get('data')).user
+			print(wifi_user)
 			try:
-				wifi_user = models.WIFI_USERS_LIST.objects.get(id=request.POST.get('data')).user
 				WIFI_Thread(clean_wifi_user,
 				            (wifi_user,),
-				            wifi_user, request.session['user'])
+				            wifi_user, request.session.get('user'))
 				return HttpResponse(json.dumps({'ok': '正在强制用户下线，请稍后！！！'}), content_type="application/json")
 			except Exception as e:
 				return HttpResponse(json.dumps({'ok': f'程序出错,{e}'}), content_type="application/json")
 
-
-
+@auth
+def wifi_changepassword(request):
+	#修改用户密码
+	if request.is_ajax():
+		if request.method == 'POST':
+			try:
+				WIFI_Thread(change_wifi_pwd,(request.POST.get('user'),request.POST.get('pwd'),),request.POST,request.session.get('user'))
+				return HttpResponse(json.dumps({'ok': '修改密码成功！！！'}), content_type="application/json")
+			except Exception as e:
+				return HttpResponse(json.dumps({'ok': f'程序出错,{e}'}), content_type="application/json")
+	return render(request,'wifi_changepasswd.html',menu_list(request))
 
 
 @auth

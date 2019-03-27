@@ -1,10 +1,11 @@
 import pexpect,paramiko,logging,hashlib,datetime,time,telnetlib,threading
 from io import StringIO
 
+
 WIFI_MANAGER_IP = '192.168.96.253'
 WIFI_USER = 'admin'
 WIFI_PWD = 'merring@her0910'
-
+#create_user = 'jiangbenle'
 
 
 
@@ -63,13 +64,18 @@ def create_wifi_user(create_user,pwd,user_no):
 		a.expect('WIFI-AC')
 		a.sendline('save main.cfg')
 		a.expect('The current configuration will be saved to flash:/main.cfg. Continue?')
+		#print('baocun')
 		a.sendline('Y')
 		a.expect('flash:/main.cfg exists, overwrite?')
+		#print('queren')
 		a.sendline('Y')
 		a.expect('Configuration is saved to device successfully.')
 		a.sendline('save backup.cfg')
 		a.expect('The current configuration will be saved to flash:/backup.cfg. Continue?')
+		#print('baocun')
+		a.sendline('Y')
 		a.expect('flash:/backup.cfg exists, overwrite?')
+		#print('queren')
 		a.sendline('Y')
 		a.expect('WIFI-AC')
 		return True
@@ -108,6 +114,7 @@ def create_wifi_guest(create_user,pwd,start_time,end_time):
 		a.expect('Configuration is saved to device successfully.')
 		a.sendline('save backup.cfg')
 		a.expect('The current configuration will be saved to flash:/backup.cfg. Continue?')
+		a.sendline('Y')
 		a.expect('flash:/backup.cfg exists, overwrite?')
 		a.sendline('Y')
 		a.expect('WIFI-AC')
@@ -131,15 +138,21 @@ def detele_wifi_guest(create_user):
 		a.expect('WIFI-AC')
 		a.sendline('save main.cfg')
 		a.expect('The current configuration will be saved to flash:/main.cfg. Continue?')
+		print('baocun')
 		a.sendline('Y')
 		a.expect('flash:/main.cfg exists, overwrite?')
+		print('queren')
 		a.sendline('Y')
 		a.expect('Configuration is saved to device successfully.')
 		a.sendline('save backup.cfg')
 		a.expect('The current configuration will be saved to flash:/backup.cfg. Continue?')
-		a.expect('flash:/backup.cfg exists, overwrite?')
+		print('back')
 		a.sendline('Y')
-		a.expect('WIFI-AC')
+		a.expect('flash:/backup.cfg exists, overwrite?')
+		print('queren')
+		a.sendline('Y')
+		a.expect('Configuration is saved to device successfully.')
+		
 		return True
 	except Exception:
 		return False
@@ -158,23 +171,62 @@ def clean_wifi_user(create_user):
 		a.expect('System View')
 		a.sendline(f'portal delete-user username {create_user} ')
 		a.expect('WIFI-AC')
+		#print(create_user)
 		a.sendline('save main.cfg')
 		a.expect('The current configuration will be saved to flash:/main.cfg. Continue?')
+		#print('baocun')
 		a.sendline('Y')
 		a.expect('flash:/main.cfg exists, overwrite?')
+		#print('queren')
 		a.sendline('Y')
 		a.expect('Configuration is saved to device successfully.')
 		a.sendline('save backup.cfg')
 		a.expect('The current configuration will be saved to flash:/backup.cfg. Continue?')
-		a.expect('flash:/backup.cfg exists, overwrite?')
+		#print('back')
 		a.sendline('Y')
-		a.expect('WIFI-AC')
+		a.expect('flash:/backup.cfg exists, overwrite?')
+		#print('queren')
+		a.sendline('Y')
+		a.expect('Configuration is saved to device successfully.')
 		return True
 	except Exception:
 		return False
 	
-	
-	
+def change_wifi_pwd(user,pwd):
+	a = pexpect.spawn('telnet %s' % WIFI_MANAGER_IP)
+	a.expect('login:')
+	a.sendline(WIFI_USER)
+	a.expect('Password:')
+	a.sendline(WIFI_PWD)
+	a.expect('<WIFI-AC>')
+	a.sendline('sys')
+	a.expect('System View')
+	a.sendline(f'local-user {user} class network')
+	a.expect(f'WIFI-AC-luser-network-{user}')
+	#print(111)
+	a.sendline(f'password simple {pwd}')
+	a.expect(f'WIFI-AC-luser-network-{user}')
+	#print(222)
+	a.sendline('save main.cfg')
+	a.expect('The current configuration will be saved to flash:/main.cfg. Continue?')
+	#print('baocun')
+	a.sendline('Y')
+	a.expect('flash:/main.cfg exists, overwrite?')
+	#print('queren')
+	a.sendline('Y')
+	a.expect('Configuration is saved to device successfully.')
+	a.sendline('save backup.cfg')
+	a.expect('The current configuration will be saved to flash:/backup.cfg. Continue?')
+	#print('back')
+	a.sendline('Y')
+	a.expect('flash:/backup.cfg exists, overwrite?')
+	#print('queren')
+	a.sendline('Y')
+	a.expect('Configuration is saved to device successfully.')
 #create_wifi_guest(create_user,pwd,start_time,end_time)  #创建
-#detele_wifi_user(create_user)
+#clean_wifi_user(create_user)
 
+#change_wifi_pwd('jiangbenle','123456')
+#detele_wifi_guest('jiangbenle')
+#create_wifi_user(create_user,'12345678','2')
+#detele_wifi_user('jiangbenle')
