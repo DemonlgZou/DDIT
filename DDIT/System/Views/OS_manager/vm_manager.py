@@ -10,8 +10,6 @@ def listen():
 	full_disk = ''
 	for i in disk:
 		try:
-	
-			#print(psutil.disk_usage(i.mountpoint).percent)
 			full_disk += str(psutil.disk_usage(i.mountpoint).percent)+','
 		except PermissionError:
 			pass

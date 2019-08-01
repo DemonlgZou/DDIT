@@ -23,12 +23,9 @@ urlpatterns = [
     url('OPEN_SW_PORT.html/',views.OPEN_SW_PORT,name='OPEN_SW_PORT'),
     url('vm_manager/list.html/',views.vm_manager,name='OPEN_SW_PORT_LOGS'),
     url('wifi_changepassword.html/',views.wifi_changepassword),
-<<<<<<< HEAD:DDIT/System/urls.py
     url('firewall/keep_up_flow.html/',views.keep_up_flow,name='KEEP_UP_FLOW'),
     url('firewall/up_flow_list.html/',views.up_flow_list,name='UP_FLOW_LIST'),
     url('del_up_flow/',views.del_up_flow),
    url(r'history.html/(.+)/$',views.vm_history,),
    url(r'execl.html/(.+)/$',views.vm_execl,),
-=======
->>>>>>> origin/master:System/urls.py
 ]

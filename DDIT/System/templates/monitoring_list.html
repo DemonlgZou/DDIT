@@ -106,8 +106,8 @@
 						{name:'meminfo',index:'meminfo', width:40, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}} ,
 						{name:'diskinfo',index:'diskinfo', width:40, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}},
 						{name:'netinfo',index:'netinfo', width:40, sortable:false,editable: true,edittype:"textarea", editoptions:{rows:"2",cols:"10"}},
-						{name:'history',index:'history', width:40, sortable:false, formatter: function(cellvalue, options, rowObject) {var detail = "<a href='http://127.0.0.1:8000/system_manager/history.html/" + rowObject.IP+" ' target='_blank'>查看历史 </ a>";return detail;},},
-						{name:'history',index:'history', width:40, sortable:false, formatter: function(cellvalue, options, rowObject) {var detail = "<a href='http://127.0.0.1:8000/system_manager/execl.html/" + rowObject.IP+ '/'+ " ' target='_blank'>查看状态图 </ a>";return detail;},},
+						{name:'history',index:'history', width:40, sortable:false, formatter: function(cellvalue, options, rowObject) {var detail = "<a href="+$path_base+"system_manager/history.html/" + rowObject.IP+" ' target='_blank'>查看历史 </ a>";return detail;},},
+						{name:'history',index:'history', width:40, sortable:false, formatter: function(cellvalue, options, rowObject) {var detail = "<a href="+$path_base+"system_manager/execl.html/" + rowObject.IP+ '/'+ " ' target='_blank'>查看状态图 </ a>";return detail;},},
 
 					],
 			

@@ -665,7 +665,7 @@ def DELETE_WIFI_USER(request):
 						models.WIFI_OPEARTION_RECORD.objects.create(action='删除用户', opeartor=request.session['user'],
 						                                            info=wifi_user)
 						return HttpResponse(json.dumps({'ok': '用户删除成功！！！'}), content_type="application/json")
-				return HttpResponse(json.dumps({'ok': '删除中，请稍后！！！'}), content_type="application/json")
+				#return HttpResponse(json.dumps({'ok': '删除中，请稍后！！！'}), content_type="application/json")
 			except Exception as e:
 				return HttpResponse(json.dumps({'ok': f'程序出错,{e}'}), content_type="application/json")
 
@@ -781,4 +781,4 @@ def vm_execl(request,ip):
 		return render(request,'host_status_execl.html',abc)
 	else:
 		ddit_error.error(123)
-		return redirect('www.baidu.com')
+		return render(request,'error-404.html')

@@ -452,14 +452,9 @@ def WIFI_Thread(obj_name,obj_agrs,wifi_user_agrs,username):
 		        'dept': wifi_user_agrs.get('dept'), 'user': wifi_user_agrs.get('user'),
 		        'pwd': wifi_user_agrs.get('pwd'), 'user_type': int(wifi_user_agrs.get('user_type')),
 		        'mode': int(wifi_user_agrs.get('mode')),
-<<<<<<< HEAD:DDIT/System/Views/views.py.bk
 		        'started_at':datetime.datetime.strptime(wifi_user_agrs.get('started_at'),'%Y-%m-%d'),
 		        'desc': wifi_user_agrs.get('desc'), 'operator': username,'expired_at':datetime.datetime.strptime(expired_at,'%Y-%m-%d')}
 		print(info.get('started_at'),type(info.get('started_at')))
-=======
-		        'started_at': datetime.datetime.strptime(wifi_user_agrs.get('started_at'), '%Y-%m-%d'),
-		        'desc': wifi_user_agrs.get('desc'), 'operator': username,expired_at:expired_at}
->>>>>>> origin/master:System/Views/views.py
 		models.WIFI_USERS_LIST.objects.create(**info)
 		models.WIFI_OPEARTION_RECORD.objects.create(action='创建用户', opeartor=username, info=obj_agrs)
 	elif obj_name == change_wifi_pwd:
@@ -613,15 +608,9 @@ def CLEAN_WIFI_USER(request):
    #强制用户下线
 	if request.is_ajax():
 		if request.method == 'POST':
-<<<<<<< HEAD:DDIT/System/Views/views.py.bk
 			#print(request.POST)
 			wifi_user = models.WIFI_USERS_LIST.objects.get(id=request.POST.get('data')).user
 			#print(wifi_user)
-=======
-			print(request.POST)
-			wifi_user = models.WIFI_USERS_LIST.objects.get(id=request.POST.get('data')).user
-			print(wifi_user)
->>>>>>> origin/master:System/Views/views.py
 			try:
 				WIFI_Thread(clean_wifi_user,
 				            (wifi_user,),
